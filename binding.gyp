@@ -1,7 +1,7 @@
 {
   'targets': [
     {
-      'target_name': 'node_libtorrent_wrap_bindings',
+      'target_name': 'libtorrent_nodewrap',
       'sources': [
       	'src/ffi.cc'
         , 'src/callback_info.cc'

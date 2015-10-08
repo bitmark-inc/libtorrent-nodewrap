@@ -6,30 +6,38 @@ module.exports = function() {
 
   var root_dir = __dirname.replace('/wrapper', '/');
   var s = ffi.Library(path.resolve(root_dir, 'libtorrent/src/session'), {
-    'new_session': [ 'pointer', [] ],
-    'listen_on': [ 'int', ['int', 'int'] ],
-    'add_torrent': [ 'void', ['CString', 'CString', 'CString', 'CString'] ],
-    'stop_seeding': ['int', []]
+    'get_session_ptr': [ 'pointer', [] ],
+    'get_torrent_ptr': [ 'pointer', [] ],
+    'listen_on': [ 'int', ['pointer', 'int', 'int'] ],
+    'add_torrent': [ 'void', ['pointer', 'pointer', 'CString', 'CString', 'CString', 'CString'] ],
+    'start_dht': [ 'int', ['pointer'] ],
+    'add_port_forwarding': [ 'int', ['pointer', 'int', 'int'] ],
   });
 
-  var session = function() {
-    // var _s = s.new_session();
+  var Session = function() {
+    var _s = s.get_session_ptr();
+    var _ti = s.get_torrent_ptr();
 
-    this.listen_on = function(fromPort, toPort) {
-      s.listen_on(fromPort, toPort);
+    this.listen_on = function(fromPort, toPort, callback) {
+      var port = s.listen_on(_s, fromPort, toPort);
+      callback(port);
     }
 
     this.add_torrent = function(infile, outpath, seeder, desc) {
-      s.add_torrent(infile, outpath, seeder, desc);
+      s.add_torrent(_s, _ti, infile, outpath, seeder, desc);
     }
 
-    this.stop_seeding = function() {
-      s.stop_seeding();
+    this.start_dht = function() {
+      s.start_dht(_s);
+    }
+
+    this.add_port_forwarding = function(fromPort, toPort) {
+      s.add_port_forwarding(_s, fromPort, toPort);
     }
   }
 
   var libtorrent = {
-    session: session
+    Session: Session
   }
 
   return libtorrent;

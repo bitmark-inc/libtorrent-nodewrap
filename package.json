@@ -50,6 +50,6 @@
     "crypto": false
   },
   "scripts": {
-    "test": "node test/index.js"
+    "test": "node test/test_seeding_file.js"
   }
 }

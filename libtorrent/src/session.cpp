@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include <boost/thread.hpp>
 
+#include <sys/types.h>
+#include <unistd.h>
+
 // include libtorrent
 #include "libtorrent/entry.hpp"
 #include "libtorrent/bencode.hpp"
@@ -22,96 +25,79 @@ using namespace std;
 
 extern "C" {
 
-  session ses;
-  bool is_seeding = true;
-
-  session* new_session() {
-    printf("%s\n", "new session");
+  session* get_session_ptr() {
     return new session();
   }
 
-  add_torrent_params get_torrent_param() {
-    add_torrent_params p;
-    return p;
+  boost::intrusive_ptr<torrent_info> get_torrent_ptr() {
+    boost::intrusive_ptr<torrent_info> info = NULL;
+    return info;
   }
 
-  int listen_on(int min_, int max_) {
+  int listen_on(session *ses, int min_, int max_) {
     error_code ec;
-    ses.listen_on(std::make_pair(min_, max_), ec);
-
-    return 0;
-  }
-
-  int stop_seeding() {
-    is_seeding = false;
+    ses->listen_on(std::make_pair(min_, max_), ec);
+    return ses->listen_port();
   }
 
   /*
     Create torrent file and add seeding it
-    @output - string: path of torrent file
-    @inputFile - string: path of input file
-    @outputFile - string: path of input file
+    @ses - session: the pointer hold main session
+    @info - boost::intrusive_ptr<torrent_info>
+    @infile - string: path of torrent file
+    @outpath - string: path of output file
+    @creator - string: who created this torrent (seeder)
+    @comment - string: Quick look about this torrent
   */
-  int add_torrent(const char* inFile, const char* outPath, const char* seeder, const char* desc) {
+  int add_torrent(session *ses, boost::intrusive_ptr<torrent_info> &info
+      , const char* infile, const char* outpath, const char* creator, const char* comment) {
 
+    // Read file storage
     file_storage fs;
-    add_files(fs, inFile);
+    add_files(fs, infile);
 
+    // create torrent object
     create_torrent t(fs);
-    t.set_creator(seeder);
-    t.set_comment(desc);
-    set_piece_hashes(t, outPath);
+    t.set_creator(creator);
+    t.set_comment(comment);
+    set_piece_hashes(t, outpath);
 
-
+    // create bencode
     std::vector<char> torrentBuffer;
     bencode(back_inserter(torrentBuffer), t.generate());
 
     error_code ec;
-    torrent_info info = torrent_info(&torrentBuffer[0], torrentBuffer.size(), ec);
+
+    // create torrent_info
+    info = new torrent_info(&torrentBuffer[0], torrentBuffer.size(), ec);
     if (ec) {
       std::cout << ec.message();
       return 1;
     }
 
-    std::string magnetUrl = make_magnet_uri(info);
-    std::cout << magnetUrl << "\n";
-    // magnet:?xt=urn:btih:9fbfd170df2312b0923f3bc387d69bb044d277fb
-
-    ses.listen_on(std::make_pair(6881, 6881), ec);
-    if (ec) {
-      fprintf(stderr, "failed to open listen socket: %s\n", ec.message().c_str());
-      return 1;
-    }
-
+    // set value for torrent_params
     add_torrent_params p;
-    p.save_path = outPath;
-    p.ti = &info;
+    p.save_path = "/home/vagrant/libtorrent/test/";
+    p.ti = info;
     p.seed_mode = true;
-    // allow_threading_guard guard;
-    torrent_handle th = ses.add_torrent(p, ec);
+
+    // add torrent
+    ses->add_torrent(p, ec);
     if (ec) {
       std::cout << ec.message();
       return 1;
     }
-    // s->start_dht();
-    // s->start_upnp();
-    // s->start_natpmp();
-    // s->add_port_mapping(session::udp, 6881, 6881);
 
-    torrent_status ts = th.status();
-    std::cout << torrent_status::seeding << std::endl;
-
-    while (th.status().state != torrent_status::seeding) {
-      std::cout << "Progress " << (th.status().progress * 100);
-      std::cout.flush();
-      sleep(1000);
-    }
-
-    while (is_seeding) {
-      std::cout << "Seeding ...." << endl;
-      std::cout.flush();
-      sleep(1000);
-    }
     return 0;
+  }
+
+  int start_dht(session *ses) {
+    ses->start_dht();
+  }
+
+  int add_port_forwarding(session *ses, int _min, int _max) {
+    ses->start_upnp();
+    ses->start_natpmp();
+    ses->add_port_mapping(session::udp, _min, _max);
   }
 }
