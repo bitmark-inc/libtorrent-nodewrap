@@ -21,24 +21,24 @@ module.exports = function() {
     this.listen_on = function(fromPort, toPort, callback) {
       var port = s.listen_on(_s, fromPort, toPort);
       callback(port);
-    }
+    };
 
     this.add_torrent = function(infile, outpath, seeder, desc) {
       s.add_torrent(_s, _ti, infile, outpath, seeder, desc);
-    }
+    };
 
     this.start_dht = function() {
       s.start_dht(_s);
-    }
+    };
 
     this.add_port_forwarding = function(fromPort, toPort) {
       s.add_port_forwarding(_s, fromPort, toPort);
-    }
-  }
+    };
+  };
 
   var libtorrent = {
     Session: Session
-  }
+  };
 
   return libtorrent;
-}()
+}();

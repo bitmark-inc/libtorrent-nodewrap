@@ -12,5 +12,5 @@ session.listen_on(6882, 6882, function(port) {
   console.log('Seeding .....');
 });
 setTimeout(function() {
-  console.log('Done!')
+  console.log('Done!');
 }, 30000);
