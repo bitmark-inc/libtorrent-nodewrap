@@ -25,16 +25,25 @@ using namespace std;
 
 extern "C" {
 
-  session* get_session_ptr() {
+  session* get_session_ptr()
+  {
     return new session();
   }
 
-  boost::intrusive_ptr<torrent_info> get_torrent_ptr() {
+  boost::intrusive_ptr<torrent_info> get_torrent_ptr()
+  {
     boost::intrusive_ptr<torrent_info> info = NULL;
     return info;
   }
 
-  int listen_on(session *ses, int min_, int max_) {
+  sha1_hash* get_torrent_index()
+  {
+    sha1_hash *index;
+    return index;
+  }
+
+  int listen_on(session *ses, int min_, int max_)
+  {
     error_code ec;
     ses->listen_on(std::make_pair(min_, max_), ec);
     return ses->listen_port();
@@ -49,8 +58,14 @@ extern "C" {
     @creator - string: who created this torrent (seeder)
     @comment - string: Quick look about this torrent
   */
-  int add_torrent(session *ses, boost::intrusive_ptr<torrent_info> &info
-      , const char* infile, const char* outpath, const char* creator, const char* comment) {
+  torrent_handle* add_torrent(
+    session *ses
+    , boost::intrusive_ptr<torrent_info> &info
+    , const char* infile
+    , const char* outpath
+    , const char* creator
+    , const char* comment)
+  {
 
     // Read file storage
     file_storage fs;
@@ -72,32 +87,53 @@ extern "C" {
     info = new torrent_info(&torrentBuffer[0], torrentBuffer.size(), ec);
     if (ec) {
       std::cout << ec.message();
-      return 1;
     }
 
     // set value for torrent_params
     add_torrent_params p;
-    p.save_path = "/home/vagrant/libtorrent/test/";
+    p.save_path = outpath;
     p.ti = info;
     p.seed_mode = true;
 
     // add torrent
-    ses->add_torrent(p, ec);
+    torrent_handle th = ses->add_torrent(p, ec);
     if (ec) {
       std::cout << ec.message();
-      return 1;
     }
 
-    return 0;
+    return new torrent_handle(th);
   }
 
-  int start_dht(session *ses) {
+  int start_dht(session *ses)
+  {
     ses->start_dht();
   }
 
-  int add_port_forwarding(session *ses, int _min, int _max) {
+  int add_port_forwarding(session *ses, int _min, int _max)
+  {
     ses->start_upnp();
     ses->start_natpmp();
     ses->add_port_mapping(session::udp, _min, _max);
+  }
+
+  int get_torrents(session *ses, std::vector<torrent_handle> &torrents)
+  {
+    torrents = ses->get_torrents();
+    return 0;
+  }
+
+  torrent_handle* find_torrent(session *ses, torrent_handle *th) {
+    sha1_hash info_hash = th->info_hash();
+    torrent_handle th_tmp = ses->find_torrent(info_hash);
+    return new torrent_handle(th_tmp);
+  }
+
+  int remove_torrent(session *ses, torrent_handle *th) {
+    ses->remove_torrent(*th);
+    return 0;
+  }
+
+  int get_downloading_progress(torrent_handle *th) {
+    return th->status().progress;
   }
 }
