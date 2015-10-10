@@ -20,7 +20,7 @@ session.listen_on(6882, 6882, function(port) {
   // console.log('Delete torrent: ' + result);
 
   var process = session.get_downloading_progress();
-  console.log('Download Process .....');
+  console.log('Download Process ..... ');
   console.log('Seeding .....');
 });
 setTimeout(function() {
