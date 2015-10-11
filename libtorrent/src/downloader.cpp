@@ -19,7 +19,8 @@ int main(int argc, char* argv[]) {
   session ses;
   add_torrent_params p;
   p.save_path = "./";
-  p.url = "magnet:?xt=urn:btih:82d05efa9a34bcb143215c307a6f066179551000&dn=test_data.txt";
+  // p.url = "magnet:?xt=urn:btih:82d05efa9a34bcb143215c307a6f066179551000&dn=test_data.txt";
+  p.url = "magnet:?xt=urn:btih:61e7f76315bb2fbd93962a830b7725ea639763ea&dn=precise64.box";
   torrent_handle th = ses.add_torrent(p);
 
   std::cout << "Downloading meta data..." << std::endl;

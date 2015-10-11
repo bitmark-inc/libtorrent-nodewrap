@@ -11,11 +11,16 @@ module.exports = function() {
     'get_torrent_index': [ 'pointer', [] ],
     'listen_on': [ 'int', ['pointer', 'int', 'int'] ],
     'add_torrent': [ 'pointer', ['pointer', 'pointer', 'CString', 'CString', 'CString', 'CString'] ],
+    'create_magnet_uri': [ ref.refType('CString'), ['pointer'] ],
     'start_dht': [ 'int', ['pointer'] ],
     'add_port_forwarding': [ 'int', ['pointer', 'int', 'int'] ],
     'find_torrent': [ 'pointer', ['pointer', 'pointer'] ],
     'remove_torrent': [ 'int', ['pointer', 'pointer'] ],
-    'get_downloading_progress': [ 'int', ['pointer'] ],
+    'get_downloading_progress': [ 'double', ['pointer'] ],
+    'get_torrent_state': [ 'int', ['pointer'] ],
+    'get_info_hash': [ 'CString', ['pointer'] ],
+    'find_torrent_info_hash': [ 'pointer', ['pointer', 'CString'] ],
+    'add_torrent_by_maget_uri': [ 'pointer', ['pointer', 'CString', 'CString'] ],
   });
 
   var Session = function() {
@@ -35,6 +40,14 @@ module.exports = function() {
 
       // add torrent info into torrent_infos list
       _torrent_infos.push(ti);
+
+      return th_ptr;
+    };
+
+    this.add_torrent_by_maget_uri = function(savepath, magnet_uri) {
+
+      // call add torrent info
+      var th_ptr = s.add_torrent_by_maget_uri(_s, savepath, magnet_uri);
 
       return th_ptr;
     };
@@ -62,6 +75,18 @@ module.exports = function() {
 
     this.get_downloading_progress = function(t_handle_ptr) {
       return s.get_downloading_progress(t_handle_ptr);
+    };
+
+    this.get_torrent_state = function(t_handle_ptr) {
+      return s.get_torrent_state(t_handle_ptr);
+    };
+
+    this.get_info_hash = function(t_handle_ptr) {
+      return s.get_info_hash(t_handle_ptr);
+    };
+
+    this.find_torrent_info_hash = function(t_index) {
+       return s.find_torrent_info_hash(_s, t_index);
     };
   };
 

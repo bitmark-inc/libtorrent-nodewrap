@@ -104,6 +104,18 @@ extern "C" {
     return new torrent_handle(th);
   }
 
+  torrent_handle* add_torrent_by_maget_uri(session *ses, char* savepath, char* magnet_uri) {
+
+    std::cout << savepath << std::endl;
+    std::cout << magnet_uri << std::endl;
+    add_torrent_params p;
+    p.save_path = savepath;
+    p.url = magnet_uri;
+    torrent_handle th = ses->add_torrent(p);
+
+    return new torrent_handle(th);
+  }
+
   int start_dht(session *ses)
   {
     ses->start_dht();
@@ -133,7 +145,34 @@ extern "C" {
     return 0;
   }
 
-  int get_downloading_progress(torrent_handle *th) {
+  double get_downloading_progress(torrent_handle *th) {
     return th->status().progress;
+  }
+
+  int get_torrent_state(torrent_handle *th) {
+    return th->status().state;
+  }
+
+  char* create_magnet_uri(torrent_handle *th) {
+
+    char *magnet = (char*)make_magnet_uri(*th).c_str();
+    add_torrent_params p;
+    error_code ec;
+    parse_magnet_uri(make_magnet_uri(*th), p, ec);
+
+    return (char*)p.info_hash.to_string().c_str();
+  }
+
+  char* get_info_hash(torrent_handle *th) {
+    return (char*)th->info_hash().to_string().c_str();
+  }
+
+  torrent_handle* find_torrent_info_hash(session *ses, char *t_info_hash) {
+    sha1_hash *info_hash = new sha1_hash(t_info_hash);
+    std::cout << "find_torrent_info_hash :" << info_hash->to_string() << std::endl;
+    sha1_hash info_tmp = *info_hash;
+    torrent_handle th_tmp = ses->find_torrent(info_tmp);
+    std::cout << "find_torrent :" << th_tmp.info_hash().to_string() << std::endl;
+    return new torrent_handle(th_tmp);
   }
 }
