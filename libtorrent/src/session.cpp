@@ -44,7 +44,7 @@ extern "C" {
 
   int listen_on(session *ses, int min_, int max_)
   {
-    error_code ec;
+    libtorrent::error_code ec;
     ses->listen_on(std::make_pair(min_, max_), ec);
     return ses->listen_port();
   }
@@ -87,7 +87,7 @@ extern "C" {
     std::vector<char> torrentBuffer;
     bencode(back_inserter(torrentBuffer), t.generate());
 
-    error_code ec;
+    libtorrent::error_code ec;
 
     // create torrent_info
     info = new torrent_info(&torrentBuffer[0], torrentBuffer.size(), ec);
@@ -129,6 +129,7 @@ extern "C" {
   int start_dht(session *ses)
   {
     ses->start_dht();
+    return 0;
   }
 
   int add_port_forwarding(session *ses, int _min, int _max)
@@ -136,6 +137,7 @@ extern "C" {
     ses->start_upnp();
     ses->start_natpmp();
     ses->add_port_mapping(session::udp, _min, _max);
+    return 0;
   }
 
   int get_torrents(session *ses, std::vector<torrent_handle> &torrents)
@@ -167,7 +169,7 @@ extern "C" {
 
     char *magnet = (char*)make_magnet_uri(*th).c_str();
     add_torrent_params p;
-    error_code ec;
+    libtorrent::error_code ec;
     parse_magnet_uri(make_magnet_uri(*th), p, ec);
 
     return (char*)p.info_hash.to_string().c_str();
