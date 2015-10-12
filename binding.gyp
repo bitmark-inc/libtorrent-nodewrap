@@ -1,4 +1,7 @@
 {
+  "variables": {
+    "boost_root%": "./libraries/"
+  },
   'targets': [
     {
       'target_name': 'node_libtorrent_wrap_bindings',
@@ -8,7 +11,8 @@
         , 'src/threaded_callback_invokation.cc'
       ],
       'include_dirs': [
-        '<!(node -e "require(\'nan\')")'
+        '<!(node -e "require(\'nan\')")',
+        '<@(boost_root)',
       ],
       'dependencies': [
         'deps/libffi/libffi.gyp:ffi'
@@ -28,7 +32,7 @@
             ]
           },
           'libraries': [
-              '-lobjc'
+            '-lobjc'
           ],
         }]
       ]

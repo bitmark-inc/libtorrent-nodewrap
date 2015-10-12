@@ -1,35 +1,29 @@
 {
   "name": "libtorrent-nodewrap",
-  "version": "0.1.3",
-  "description": "Nodejs wraper for TweetNaCl cryptographic library",
-  "main": "nacl.js",
+  "version": "0.1.0",
+  "description": "Nodejs wraper for Libtorrent Library",
+  "main": "wrapper/libtorrent.js",
   "directories": {
     "test": "test"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/bitmark-inc/tweetnacl-nodewrap.git"
+    "url": "https://github.com/bitmark-inc/libtorrent-nodewrap"
   },
   "keywords": [
-    "crypto",
-    "cryptography",
-    "curve25519",
-    "ed25519",
-    "encrypt",
-    "hash",
-    "key",
-    "nacl",
-    "poly1305",
-    "public",
-    "salsa20",
-    "signatures"
+    "libtorrent",
+    "node-ffi",
+    "node-ref",
+    "node-gyp",
+    "nodejs",
+    "node-ws"
   ],
   "author": {
     "name": "bitmark-inc"
   },
   "license": "Public domain",
   "bugs": {
-    "url": "https://github.com/bitmark-inc/tweetnacl-nodewrap/issues"
+    "url": "https://github.com/bitmark-inc/libtorrent-nodewrap/issues"
   },
   "engines": {
     "node": ">=0.12.0"
@@ -50,6 +44,7 @@
     "crypto": false
   },
   "scripts": {
-    "test": "node test/test_seeding_file.js"
+    "test": "node test/test_seeding_file.js",
+    "install": "export LD_LIBRARY_PATH=/home/vagrant/libtorrent/libraries/ | node-gyp rebuild"
   }
 }

@@ -6,7 +6,7 @@ session.listen_on(6882, 6882, function(port) {
   console.log('Torrent client are literning at port: ' + port);
 
   // add torrent
-  var infile = path.resolve(__dirname, 'test_data.txt');
+  var infile = '/home/vagrant/libtorrent/test/data';
   // var infile = path.resolve(__dirname, 'precise64.box'); // lagger file
   var outpath = path.resolve(__dirname);
   var t_handle_ptr = session.add_torrent(infile, outpath, 'KimThi', 'Testfile');

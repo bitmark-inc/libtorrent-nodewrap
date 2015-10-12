@@ -68,8 +68,14 @@ extern "C" {
   {
 
     // Read file storage
+    std::cout << infile << std::endl;
     file_storage fs;
     add_files(fs, infile);
+
+    if (fs.num_files() > 0)
+    {
+      std::cout << "Added " << fs.num_files() << " into the Torrent" << std::endl;
+    }
 
     // create torrent object
     create_torrent t(fs);
@@ -100,6 +106,10 @@ extern "C" {
     if (ec) {
       std::cout << ec.message();
     }
+
+    // print magnet_uri
+    const char *magnet = make_magnet_uri(th).c_str();
+    std::cout << magnet << std::endl;
 
     return new torrent_handle(th);
   }
