@@ -45,6 +45,6 @@
   },
   "scripts": {
     "test": "node test/test_seeding_file.js",
-    "install": "export LD_LIBRARY_PATH=/home/vagrant/libtorrent/libraries/ | node-gyp rebuild"
+    "install": "./install.sh"
   }
 }
