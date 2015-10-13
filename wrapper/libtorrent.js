@@ -8,9 +8,9 @@ module.exports = function() {
   var root_dir = __dirname.replace('/wrapper', '/');
 
   // set LD_LIBRARY_PATH
-  process.env =  {
-    LD_LIBRARY_PATH: path.resolve(root_dir, 'libraries')
-  }
+  process.env.LD_LIBRARY_PATH = path.resolve(root_dir, 'libraries');
+
+  console.log(process.env.LD_LIBRARY_PATH);
 
   var s = ffi.Library(path.resolve(root_dir, 'libtorrent/src/session'), {
     'get_session_ptr': [ 'pointer', [] ],

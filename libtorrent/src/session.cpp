@@ -30,10 +30,9 @@ extern "C" {
     return new session();
   }
 
-  boost::intrusive_ptr<torrent_info> get_torrent_ptr()
+  boost::intrusive_ptr<torrent_info>* get_torrent_ptr()
   {
-    boost::intrusive_ptr<torrent_info> info = NULL;
-    return info;
+    return new boost::intrusive_ptr<torrent_info>();
   }
 
   sha1_hash* get_torrent_index()
@@ -60,7 +59,7 @@ extern "C" {
   */
   torrent_handle* add_torrent(
     session *ses
-    , boost::intrusive_ptr<torrent_info> &info
+    , boost::intrusive_ptr<torrent_info> *info
     , const char* infile
     , const char* outpath
     , const char* creator
@@ -90,7 +89,7 @@ extern "C" {
     libtorrent::error_code ec;
 
     // create torrent_info
-    info = new torrent_info(&torrentBuffer[0], torrentBuffer.size(), ec);
+    *info = new torrent_info(&torrentBuffer[0], torrentBuffer.size(), ec);
     if (ec) {
       std::cout << ec.message();
     }
@@ -98,7 +97,7 @@ extern "C" {
     // set value for torrent_params
     add_torrent_params p;
     p.save_path = outpath;
-    p.ti = info;
+    p.ti = *info;
     p.seed_mode = true;
 
     // add torrent
