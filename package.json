@@ -44,7 +44,6 @@
     "crypto": false
   },
   "scripts": {
-    "test": "node test/test_seeding_file.js",
-    "install": "./install.sh"
+    "test": "node test/test_seeding_file.js"
   }
 }
