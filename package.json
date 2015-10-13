@@ -44,6 +44,6 @@
     "crypto": false
   },
   "scripts": {
-    "test": "node test/test_seeding_file.js"
+    "test": ". ./config_lib.sh && node test/test_seeding_file.js"
   }
 }
