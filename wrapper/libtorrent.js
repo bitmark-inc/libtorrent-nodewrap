@@ -4,7 +4,16 @@ var path = require('path');
 
 module.exports = function() {
 
+  // get root dir
   var root_dir = __dirname.replace('/wrapper', '/');
+
+  // set LD_LIBRARY_PATH
+  process.env =  {
+    LD_LIBRARY_PATH: path.resolve(root_dir, 'libraries')
+  }
+
+  console.log('AAAAAAA' + process.env.LD_LIBRARY_PATH);
+
   var s = ffi.Library(path.resolve(root_dir, 'libtorrent/src/session'), {
     'get_session_ptr': [ 'pointer', [] ],
     'get_torrent_ptr': [ 'pointer', [] ],
