@@ -130,6 +130,10 @@ extern "C" {
     return 0;
   }
 
+  char* get_name(torrent_handle *th) {
+    return (char*)th->name().c_str();
+  }
+
   int start_dht(session *ses)
   {
     ses->start_dht();

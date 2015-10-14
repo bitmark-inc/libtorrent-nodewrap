@@ -36,6 +36,7 @@ module.exports = function() {
     'find_torrent_info_hash': [ 'pointer', ['pointer', 'CString'] ],
     'add_torrent_by_maget_uri': [ 'pointer', ['pointer', 'CString', 'CString'] ],
     'add_url_seed': [ 'int', ['pointer', 'CString'] ],
+    'get_name': [ 'CString', ['pointer'] ],
   });
 
   var Session = function() {
@@ -69,6 +70,10 @@ module.exports = function() {
 
     this.add_url_seed = function(th_ptr, url_seed) {
       s.add_url_seed(th_ptr, url_seed);
+    }
+
+    this.get_name = function(th_ptr) {
+      return s.get_name(th_ptr);
     }
 
     this.start_dht = function() {
