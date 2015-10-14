@@ -1,4 +1,4 @@
-var libtorrent = require('../wrapper/libtorrent');
+var libtorrent = require('../src/js/libtorrent');
 var path = require('path');
 
 var session = new libtorrent.Session();
@@ -6,7 +6,8 @@ session.listen_on(6882, 6882, function(port) {
   console.log('Torrent client are literning at port: ' + port);
 
   // add torrent
-  var infile = '/Users/thinhuockim/Documents/project/bitmark/libtorrent-nodewrap/test/data';
+  var infile = '/home/vagrant/libtorrent/test/data';
+  // var infile = '/Users/thinhuockim/Documents/project/bitmark/libtorrent-nodewrap/test/data';
   // var infile = path.resolve(__dirname, 'precise64.box'); // lagger file
   var outpath = path.resolve(__dirname);
   var t_handle_ptr = session.add_torrent(infile, outpath, 'KimThi', 'Testfile');

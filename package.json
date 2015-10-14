@@ -30,10 +30,11 @@
   },
   "dependencies": {
     "bindings": "~1.2.0",
-    "ref": "1",
-    "ref-struct": "1",
+    "debug": "~2",
+    "ffi": "^2.0.0",
     "nan": "2",
-    "debug": "~2"
+    "ref": "1",
+    "ref-struct": "1"
   },
   "devDependencies": {
     "mocha": "*",

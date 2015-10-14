@@ -1,4 +1,4 @@
-var libtorrent = require('../wrapper/libtorrent');
+var libtorrent = require('../src/js/libtorrent');
 var path = require('path');
 
 var session = new libtorrent.Session();
