@@ -8,6 +8,7 @@ var savepath = './';
 // var magnet_uri = 'magnet:?xt=urn:btih:82d05efa9a34bcb143215c307a6f066179551000&dn=test_data.txt';
 var magnet_uri = 'magnet:?xt=urn:btih:3e06c8b4a4000f40e6d07a84f81cd30b11aa90e4&dn=data'; // download 2 file
 var th_ptr = session.add_torrent_by_maget_uri(savepath, magnet_uri);
+session.add_url_seed(th_ptr, '127.0.0.1:6882');
 
 var time = setInterval(function() {
   var progress = session.get_downloading_progress(th_ptr);

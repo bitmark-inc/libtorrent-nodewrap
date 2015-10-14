@@ -125,6 +125,11 @@ extern "C" {
     return new torrent_handle(th);
   }
 
+  int add_url_seed(torrent_handle *th, char *url_seed) {
+    th->add_url_seed(url_seed);
+    return 0;
+  }
+
   int start_dht(session *ses)
   {
     ses->start_dht();
