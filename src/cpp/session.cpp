@@ -30,6 +30,11 @@ extern "C" {
     return new session();
   }
 
+  // int stop_session(session s) {
+  //   s = new ~session();
+  //   return 0;
+  // }
+
   boost::intrusive_ptr<torrent_info>* get_torrent_ptr()
   {
     return new boost::intrusive_ptr<torrent_info>();
