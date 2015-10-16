@@ -9,12 +9,12 @@ var boostSystem, boostThread, libtorrentRasterbar;
 // Load boost library and libtorrent library
 if (ffi.LIB_EXT == '.so') {
   boostSystem = ffi.DynamicLibrary(root_dir + 'lib/linux/libboost_system' + ffi.LIB_EXT + '.1.54.0');
-  boostThread = ffi.DynamicLibrary(root_dir + '/lib/linux/libboost_thread' + ffi.LIB_EXT + '.1.54.0');
-  libtorrentRasterbar = ffi.DynamicLibrary(root_dir + '/lib/linux/libtorrent-rasterbar' + ffi.LIB_EXT + '.8');
+  boostThread = ffi.DynamicLibrary(root_dir + 'lib/linux/libboost_thread' + ffi.LIB_EXT + '.1.54.0');
+  libtorrentRasterbar = ffi.DynamicLibrary(root_dir + 'lib/linux/libtorrent-rasterbar' + ffi.LIB_EXT + '.8');
 } else if(ffi.LIB_EXT == '.dylib') {
-  boostSystem = ffi.DynamicLibrary(root_dir + '/lib/osx/libboost_system' + ffi.LIB_EXT);
-  boostThread = ffi.DynamicLibrary(root_dir + '/lib/osx/libboost_thread' + ffi.LIB_EXT);
-  libtorrentRasterbar = ffi.DynamicLibrary(root_dir + '/lib/osx/libtorrent-rasterbar.8' + ffi.LIB_EXT);
+  boostSystem = ffi.DynamicLibrary(root_dir + 'lib/osx/libboost_system' + ffi.LIB_EXT);
+  boostThread = ffi.DynamicLibrary(root_dir + 'lib/osx/libboost_thread' + ffi.LIB_EXT);
+  libtorrentRasterbar = ffi.DynamicLibrary(root_dir + 'lib/osx/libtorrent-rasterbar.8' + ffi.LIB_EXT);
 }
 
 module.exports = function() {
@@ -25,7 +25,7 @@ module.exports = function() {
     'get_torrent_index': [ 'pointer', [] ],
     'listen_on': [ 'int', ['pointer', 'int', 'int'] ],
     'add_torrent': [ 'pointer', ['pointer', 'pointer', 'CString', 'CString', 'CString', 'CString'] ],
-    'create_magnet_uri': [ ref.refType('CString'), ['pointer'] ],
+    'create_magnet_uri': [ 'CString', ['CString', 'CString'] ],
     'start_dht': [ 'int', ['pointer'] ],
     'add_port_forwarding': [ 'int', ['pointer', 'int', 'int'] ],
     'find_torrent': [ 'pointer', ['pointer', 'pointer'] ],
@@ -37,6 +37,7 @@ module.exports = function() {
     'add_torrent_by_maget_uri': [ 'pointer', ['pointer', 'CString', 'CString'] ],
     'add_url_seed': [ 'int', ['pointer', 'CString'] ],
     'get_name': [ 'CString', ['pointer'] ],
+    'stop_session': [ 'int', ['pointer'] ],
   });
 
   var Session = function() {
@@ -58,6 +59,10 @@ module.exports = function() {
       _torrent_infos.push(ti);
 
       return th_ptr;
+    };
+
+    this.create_magnet_uri = function(infile, outpath) {
+      return s.create_magnet_uri(infile, outpath);
     };
 
     this.add_torrent_by_maget_uri = function(savepath, magnet_uri) {
@@ -112,6 +117,10 @@ module.exports = function() {
     this.find_torrent_info_hash = function(t_index) {
        return s.find_torrent_info_hash(_s, t_index);
     };
+
+    this.stop_session = function() {
+      return s.stop_session(_s);
+    }
   };
 
   var libtorrent = {

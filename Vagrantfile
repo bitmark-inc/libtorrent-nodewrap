@@ -11,7 +11,7 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  #config.vm.network :private_network, ip: "192.168.33.10"
+  config.vm.network :private_network, ip: "192.168.33.10"
 
   # forward port for node server
   config.vm.network :forwarded_port, guest: 3000, host: 3000
@@ -28,6 +28,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # forward port for frontend
   config.vm.network :forwarded_port, guest: 35729, host: 35729
+
+  # forward port for Torrent
+  config.vm.network :forwarded_port, guest: 6882, host: 6882
 
   # Data folder
   config.vm.synced_folder "./", "/home/vagrant/libtorrent"

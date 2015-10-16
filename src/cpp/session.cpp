@@ -30,10 +30,10 @@ extern "C" {
     return new session();
   }
 
-  // int stop_session(session s) {
-  //   s = new ~session();
-  //   return 0;
-  // }
+  int stop_session(session *s) {
+    delete s;
+    return 0;
+  }
 
   boost::intrusive_ptr<torrent_info>* get_torrent_ptr()
   {
@@ -178,14 +178,27 @@ extern "C" {
     return th->status().state;
   }
 
-  char* create_magnet_uri(torrent_handle *th) {
+  char* create_magnet_uri(const char* infile, const char* outpath) {
 
-    char *magnet = (char*)make_magnet_uri(*th).c_str();
-    add_torrent_params p;
+    file_storage fs;
+    add_files(fs, infile);
+
+    create_torrent t(fs);
+    t.set_creator("");
+    t.set_comment("");
+    set_piece_hashes(t, outpath);
+
+    std::vector<char> torrentBuffer;
+    bencode(back_inserter(torrentBuffer), t.generate());
+
     libtorrent::error_code ec;
-    parse_magnet_uri(make_magnet_uri(*th), p, ec);
+    torrent_info* info = new torrent_info(&torrentBuffer[0], torrentBuffer.size(), ec);
+    if (ec) {
+      std::cout << ec.message();
+    }
 
-    return (char*)p.info_hash.to_string().c_str();
+    std::string magnetUrl = make_magnet_uri(*info);
+    return strdup(magnetUrl.c_str());
   }
 
   char* get_info_hash(torrent_handle *th) {
