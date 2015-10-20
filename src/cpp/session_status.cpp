@@ -1,7 +1,9 @@
 // include C
+#include <unistd.h>
 #include "libtorrent/session.hpp"
 
 using namespace libtorrent;
+using namespace std;
 
 extern "C" {
   session_status* get_session_status(session *s) {

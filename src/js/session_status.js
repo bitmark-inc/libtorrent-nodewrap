@@ -1,6 +1,7 @@
 var ffi = require('ffi');
 var path = require('path');
 var external_lib = require('./load_external_library');
+var UtpStatus = require('./utp_status');
 
 // get root dir
 var root_dir = __dirname.replace('/src/js', '/');
@@ -49,7 +50,6 @@ module.exports = function() {
     // 'get_active_requests': [ 'std::vector<dht_lookup>', ['pointer'] ],
     // 'get_dht_routing_table': [ 'std::vector<dht_routing_bucket>', ['pointer'] ],
     'get_dht_total_allocations': [ 'int', ['pointer'] ],
-    // 'get_utp_stats': [ 'utp_status', ['pointer'] ],
     'get_peerlist_size': [ 'int', ['pointer'] ],
   });
 
@@ -61,6 +61,7 @@ module.exports = function() {
     // get session status pointer
     var _s_status = s_status.get_session_status(_s);
 
+    // set properties
     this.upload_rate = s_status.get_upload_rate(_s_status);
     this.download_rate = s_status.get_download_rate(_s_status);
     this.total_download = s_status.get_total_download(_s_status);
@@ -100,6 +101,10 @@ module.exports = function() {
     this.dht_global_nodes = s_status.get_dht_global_nodes(_s_status);
     this.dht_total_allocations = s_status.get_dht_total_allocations(_s_status);
     this.peerlist_size = s_status.get_peerlist_size(_s_status);
+
+    // set value for utp_status object
+    this.utp_status = new UtpStatus(_s_status);
+
   };
 
   var session_status = {

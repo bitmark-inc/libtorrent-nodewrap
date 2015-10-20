@@ -26,9 +26,7 @@ session.listen_on(6882, 6882, function(port) {
 
   var sessionStatus = session.status();
   console.log('sessionStatus: ' + sessionStatus.total_upload);
-  if (sessionStatus.has_incoming_connections == true) {
-    console.log('Someone are connecting your server...');
-  }
+  console.log('sessionStatus.utp_status.num_idle: ' + sessionStatus.utp_status.num_connected);
 
   console.log('Seeding ..... ');
 });
