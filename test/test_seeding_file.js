@@ -1,7 +1,7 @@
-var libtorrent = require('../src/js/libtorrent');
+var session = require('../src/js/session');
 var path = require('path');
 
-var session = new libtorrent.Session();
+var session = new session.Session();
 session.listen_on(6882, 6882, function(port) {
   console.log('Torrent client are literning at port: ' + port);
 
@@ -18,15 +18,21 @@ session.listen_on(6882, 6882, function(port) {
 
   var t_handle_ptr = session.add_torrent(infile, outpath, 'KimThi', 'Testfile');
 
-  // find torrent
-  // var t_handle_ptr_2 = session.find_torrent(t_handle_ptr);
-  // console.log('t_handle_ptr_2: ' + t_handle_ptr_2);
+  // var sessionStatus = session.get_session_status_ptr();
+  // console.log('sessionStatus: ' + sessionStatus.upload_rate);
 
   session.start_dht();
   session.add_port_forwarding(6882, 6882);
 
-  console.log('Sedding ..... ');
+  var sessionStatus = session.get_session_status_ptr();
+  console.log('sessionStatus: ' + sessionStatus.total_upload);
+  if (sessionStatus.has_incoming_connections == true) {
+    console.log('Someone are connecting your server...');
+  }
+
+  console.log('Seeding ..... ');
 });
 setTimeout(function() {
+  session.stop_session();
   console.log('Done!');
-}, 300000);
+}, 1000);

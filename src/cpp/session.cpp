@@ -25,14 +25,61 @@ using namespace std;
 
 extern "C" {
 
+  /* START Wrap get torrent object in pointer */
+
+  struct session_status_ovr
+  {
+    bool has_incoming_connections;
+    int upload_rate;
+    int download_rate;
+    size_type total_download;
+    size_type total_upload;
+    utp_status utp_stats;
+    std::vector<dht_lookup> active_requests;
+  };
+
   session* get_session_ptr()
   {
     return new session();
   }
 
-  int stop_session(session *s) {
-    delete s;
-    return 0;
+  add_torrent_params* get_add_torrent_params_ptr() {
+    return new add_torrent_params();
+  }
+
+  cache_status* get_cache_status_ptr() {
+    return new cache_status();
+  }
+
+  session_proxy* get_session_proxy_ptr() {
+    return new session_proxy();
+  }
+
+  dht_lookup* get_dht_lookup_ptr() {
+    return new dht_lookup();
+  }
+
+  dht_routing_bucket* get_dht_routing_bucket_ptr() {
+    return new dht_routing_bucket();
+  }
+
+  utp_status* get_utp_status_ptr() {
+    return new utp_status();
+  }
+
+  session_status get_session_status_ptr(session *s) {
+    // return new session_status(s->status());
+    // session_status ss = s->status();
+    // session_status_ovr sso;
+
+    // sso.has_incoming_connections = true;
+    // sso.upload_rate = ss.upload_rate;
+    // sso.download_rate = ss.download_rate;
+    // sso.total_download = ss.total_download;
+    // sso.total_upload = 10;
+    // sso.utp_stats = ss.utp_stats;
+    // sso.active_requests = ss.active_requests;
+    return s->status();
   }
 
   boost::intrusive_ptr<torrent_info>* get_torrent_ptr()
@@ -44,6 +91,13 @@ extern "C" {
   {
     sha1_hash *index;
     return index;
+  }
+
+  /* END Wrap get torrent object in pointer */
+
+  int stop_session(session *s) {
+    delete s;
+    return 0;
   }
 
   int listen_on(session *ses, int min_, int max_)

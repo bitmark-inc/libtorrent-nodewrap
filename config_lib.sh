@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "Config ...."
-L_PATH="${PWD}/libraries/"
-echo "Path of libraries: ${L_PATH}"
-export LD_LIBRARY_PATH=$L_PATH
-export DYLD_LIBRARY_PATH=$L_PATH
+DYLD_PATH="${PWD}/Contents/Resources/app.nw/node_modules/"
+echo "Path of libraries: ${DYLD_PATH}"
+echo "export DYLD_LIBRARY_PATH=${DYLD_PATH}" >> ~/.bashrc
+. ~/.bashrc

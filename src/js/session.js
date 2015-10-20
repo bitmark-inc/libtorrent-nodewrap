@@ -1,6 +1,6 @@
 var ffi = require('ffi');
-var ref = require('ref');
 var path = require('path');
+var typedef = require('./libtorrent_typedef');
 
 // get root dir
 var root_dir = __dirname.replace('/src/js', '/');
@@ -38,6 +38,7 @@ module.exports = function() {
     'add_url_seed': [ 'int', ['pointer', 'CString'] ],
     'get_name': [ 'CString', ['pointer'] ],
     'stop_session': [ 'int', ['pointer'] ],
+    'get_session_status_ptr': [typedef.SessionStatus, ['pointer']]
   });
 
   var Session = function() {
@@ -120,6 +121,10 @@ module.exports = function() {
 
     this.stop_session = function() {
       return s.stop_session(_s);
+    };
+
+    this.get_session_status_ptr = function() {
+      return s.get_session_status_ptr(_s);
     }
   };
 

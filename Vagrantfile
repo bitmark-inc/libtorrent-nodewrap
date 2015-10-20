@@ -11,7 +11,7 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  config.vm.network :private_network, ip: "192.168.33.10"
+  # config.vm.network :private_network, ip: "192.168.33.10"
 
   # forward port for node server
   config.vm.network :forwarded_port, guest: 3000, host: 3000
@@ -34,6 +34,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Data folder
   config.vm.synced_folder "./", "/home/vagrant/libtorrent"
+
+  config.ssh.username = "vagrant"
+  config.ssh.password = "vagrant"
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.gui = true
+  end
 
   if defined?(SHARED_BOX_URL)
     config.vm.box = "amaryllis-amaryllis"
