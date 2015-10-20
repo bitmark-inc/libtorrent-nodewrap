@@ -1,21 +1,10 @@
 var ffi = require('ffi');
 var path = require('path');
-var typedef = require('./libtorrent_typedef');
+var external_lib = require('./load_external_library');
+var session_status = require('./session_status');
 
 // get root dir
 var root_dir = __dirname.replace('/src/js', '/');
-var boostSystem, boostThread, libtorrentRasterbar;
-
-// Load boost library and libtorrent library
-if (ffi.LIB_EXT == '.so') {
-  boostSystem = ffi.DynamicLibrary(root_dir + 'lib/linux/libboost_system' + ffi.LIB_EXT + '.1.54.0');
-  boostThread = ffi.DynamicLibrary(root_dir + 'lib/linux/libboost_thread' + ffi.LIB_EXT + '.1.54.0');
-  libtorrentRasterbar = ffi.DynamicLibrary(root_dir + 'lib/linux/libtorrent-rasterbar' + ffi.LIB_EXT + '.8');
-} else if(ffi.LIB_EXT == '.dylib') {
-  boostSystem = ffi.DynamicLibrary(root_dir + 'lib/osx/libboost_system' + ffi.LIB_EXT);
-  boostThread = ffi.DynamicLibrary(root_dir + 'lib/osx/libboost_thread' + ffi.LIB_EXT);
-  libtorrentRasterbar = ffi.DynamicLibrary(root_dir + 'lib/osx/libtorrent-rasterbar.8' + ffi.LIB_EXT);
-}
 
 module.exports = function() {
 
@@ -38,7 +27,6 @@ module.exports = function() {
     'add_url_seed': [ 'int', ['pointer', 'CString'] ],
     'get_name': [ 'CString', ['pointer'] ],
     'stop_session': [ 'int', ['pointer'] ],
-    'get_session_status_ptr': [typedef.SessionStatus, ['pointer']]
   });
 
   var Session = function() {
@@ -123,8 +111,8 @@ module.exports = function() {
       return s.stop_session(_s);
     };
 
-    this.get_session_status_ptr = function() {
-      return s.get_session_status_ptr(_s);
+    this.status = function() {
+      return new session_status.SessionStatus(_s);
     }
   };
 

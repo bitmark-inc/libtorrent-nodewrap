@@ -24,7 +24,7 @@ session.listen_on(6882, 6882, function(port) {
   session.start_dht();
   session.add_port_forwarding(6882, 6882);
 
-  var sessionStatus = session.get_session_status_ptr();
+  var sessionStatus = session.status();
   console.log('sessionStatus: ' + sessionStatus.total_upload);
   if (sessionStatus.has_incoming_connections == true) {
     console.log('Someone are connecting your server...');
