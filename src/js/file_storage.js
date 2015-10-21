@@ -17,15 +17,13 @@ module.exports = function() {
 
   var FileStorage = function() {
     var _fs = fs.new_file_storage();
+    this.get_entry = function() {
+      return _fs;
+    };
 
     this.add_file = function(infile) {
       fs.add_file_ipml(_fs, infile);
     };
-
-    this.get_instance = function() {
-      return _fs;
-    };
-
     this.file_name_ptr = function(index) {
       return fs.file_name_ptr(_fs, index);
     };
