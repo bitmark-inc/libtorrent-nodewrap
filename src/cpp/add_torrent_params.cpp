@@ -9,25 +9,38 @@ extern "C" {
     return new add_torrent_params();
   }
 
+  void set_ti(add_torrent_params *p, boost::intrusive_ptr<torrent_info> *ti) {
+    p->ti = *ti;
+  }
+  void set_info_hash(add_torrent_params *p, const char* b) {
+    sha1_hash ih(b);
+    p->info_hash = ih;
+  }
   void set_version(add_torrent_params *p, int data) {
     p->version = data;
   }
-  void set_name(add_torrent_params *p, std::string data) {
-    p->name = data;
+  void set_name(add_torrent_params *p, char* data) {
+    std::string str = data;
+    p->name = str;
   }
-  void set_save_path(add_torrent_params *p, std::string data) {
-    p->save_path = data;
+  void set_save_path(add_torrent_params *p, char* data) {
+    std::string str = data;
+    p->save_path = str;
   }
-  void set_trackerid(add_torrent_params *p, std::string data) {
-    p->trackerid = data;
+  void set_trackerid(add_torrent_params *p, char* data) {
+    std::string str = data;
+    p->trackerid = str;
   }
-  void set_url(add_torrent_params *p, std::string data) {
-    p->url = data;
+  void set_url(add_torrent_params *p, char* data) {
+    std::string str = data;
+    p->url = str;
   }
-  void set_uuid(add_torrent_params *p, std::string data) {
-    p->uuid = data;
+  void set_uuid(add_torrent_params *p, char* data) {
+    std::string str = data;
+    p->uuid = str;
   }
-  void set_source_feed_url(add_torrent_params *p, std::string data) {
+  void set_source_feed_url(add_torrent_params *p, char* data) {
+    std::string str = data;
     p->source_feed_url = data;
   }
   void set_max_uploads(add_torrent_params *p, int data) {

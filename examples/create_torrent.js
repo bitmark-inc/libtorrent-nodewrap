@@ -4,13 +4,13 @@ var CreateTorrent = require('../src/js/create_torrent');
 var TorrentInfo = require('../src/js/torrent_info');
 
 var file_storage = new FileStorage();
-var infile = '/home/vagrant/libtorrent/test/data/';
+var infile = '/home/vagrant/libtorrent/examples/data/';
 
 // add files into file_storage
 file_storage.add_file(infile);
 
 console.log('File Name:', file_storage.file_name_ptr(0));
-console.log('File Name:', file_storage.file_name_ptr(1));
+console.log('Number of files:', file_storage.num_files());
 
 // create torrent
 console.log('Create create_torrent');

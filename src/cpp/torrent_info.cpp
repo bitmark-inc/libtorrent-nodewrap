@@ -8,8 +8,8 @@ using namespace std;
 
 extern "C" {
 
-  torrent_info* new_torrent_info(entry* torrent_file) {
-    return new torrent_info(*torrent_file);
+  boost::intrusive_ptr<torrent_info>* new_torrent_info(entry* torrent_file) {
+    return (boost::intrusive_ptr<torrent_info>*)new torrent_info(*torrent_file);
   }
 
   char* create_magnet_uri(torrent_info* ti) {

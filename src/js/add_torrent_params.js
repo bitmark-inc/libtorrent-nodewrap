@@ -9,18 +9,18 @@ module.exports = function() {
 
   var add_torrent_params = ffi.Library(path.resolve(root_dir, 'src/cpp/add_torrent_params'), {
     'new_add_torrent_params': [ 'pointer', [] ],
-    'set_version': [ 'int', ['pointer'] ],
-    'set_name': [ 'CString', ['pointer'] ],
-    'set_save_path': [ 'CString', ['pointer'] ],
-    'set_trackerid': [ 'CString', ['pointer'] ],
-    'set_url': [ 'CString', ['pointer'] ],
-    'set_uuid': [ 'CString', ['pointer'] ],
-    'set_source_feed_url': [ 'CString', ['pointer'] ],
-    'set_flags': [ 'uint64', ['pointer'] ],
-    'set_max_uploads': [ 'int', ['pointer'] ],
-    'set_max_connections': [ 'int', ['pointer'] ],
-    'set_upload_limit': [ 'int', ['pointer'] ],
-    'set_download_limit': [ 'int', ['pointer'] ],
+    'set_version': [ 'void', ['pointer', 'int'] ],
+    'set_name': [ 'void', ['pointer', 'CString'] ],
+    'set_save_path': [ 'void', ['pointer', 'CString'] ],
+    'set_trackerid': [ 'void', ['pointer', 'CString'] ],
+    'set_url': [ 'void', ['pointer', 'CString'] ],
+    'set_uuid': [ 'void', ['pointer', 'CString'] ],
+    'set_source_feed_url': [ 'void', ['pointer', 'CString'] ],
+    'set_flags': [ 'void', ['pointer', 'uint64'] ],
+    'set_max_uploads': [ 'void', ['pointer', 'int'] ],
+    'set_max_connections': [ 'void', ['pointer', 'int'] ],
+    'set_upload_limit': [ 'void', ['pointer', 'int'] ],
+    'set_download_limit': [ 'void', ['pointer', 'int'] ],
 	});
 
 
