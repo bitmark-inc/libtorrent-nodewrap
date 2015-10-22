@@ -1,4 +1,5 @@
 var ffi = require('ffi');
+var ref = require('ref');
 var path = require('path');
 var external_lib = require('./load_external_library');
 

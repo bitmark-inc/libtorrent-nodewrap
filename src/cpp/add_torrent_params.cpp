@@ -12,8 +12,8 @@ extern "C" {
   void set_ti(add_torrent_params *p, boost::intrusive_ptr<torrent_info> *ti) {
     p->ti = *ti;
   }
-  void set_info_hash(add_torrent_params *p, const char* b) {
-    sha1_hash ih(b);
+  void set_info_hash(add_torrent_params *p, const char* info_hash) {
+    sha1_hash ih(info_hash);
     p->info_hash = ih;
   }
   void set_version(add_torrent_params *p, int data) {
