@@ -107,9 +107,5 @@ module.exports = function() {
 
   };
 
-  var session_status = {
-    SessionStatus: SessionStatus
-  };
-
-  return session_status;
+  return SessionStatus;
 }();

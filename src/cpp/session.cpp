@@ -107,12 +107,6 @@ extern "C" {
     return 0;
   }
 
-  int get_torrents(session *ses, std::vector<torrent_handle> &torrents)
-  {
-    torrents = ses->get_torrents();
-    return 0;
-  }
-
   torrent_handle* find_torrent(session *ses, torrent_handle *th) {
     sha1_hash info_hash = th->info_hash();
     torrent_handle th_tmp = ses->find_torrent(info_hash);
@@ -124,24 +118,7 @@ extern "C" {
     return 0;
   }
 
-  double get_downloading_progress(torrent_handle *th) {
-    return th->status().progress;
-  }
-
-  int get_torrent_state(torrent_handle *th) {
-    return th->status().state;
-  }
-
-  char* get_info_hash(torrent_handle *th) {
-    return (char*)th->info_hash().to_string().c_str();
-  }
-
-  torrent_handle* find_torrent_info_hash(session *ses, char *t_info_hash) {
-    sha1_hash *info_hash = new sha1_hash(t_info_hash);
-    std::cout << "find_torrent_info_hash :" << info_hash->to_string() << std::endl;
-    sha1_hash info_tmp = *info_hash;
-    torrent_handle th_tmp = ses->find_torrent(info_tmp);
-    std::cout << "find_torrent :" << th_tmp.info_hash().to_string() << std::endl;
-    return new torrent_handle(th_tmp);
+  short listen_port(session *ses) {
+    return ses->listen_port();
   }
 }

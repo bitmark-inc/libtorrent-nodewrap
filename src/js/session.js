@@ -13,7 +13,10 @@ module.exports = function() {
     'new_session': [ 'pointer', [] ],
     'stop_session': [ 'int', ['pointer'] ],
     'listen_on': [ 'int', ['pointer', 'int', 'int'] ],
-    'add_torrent': [ 'pointer', ['pointer', 'pointer'] ]
+    'add_torrent': [ 'pointer', ['pointer', 'pointer'] ],
+    'start_dht': [ 'int', ['pointer'] ],
+    'add_port_forwarding': [ 'int', ['pointer', 'int', 'int'] ],
+    'listen_port': [ 'short', ['pointer'] ]
   });
 
   var Session = function() {
@@ -24,9 +27,8 @@ module.exports = function() {
       return s.stop_session(_s);
     };
 
-    this.listen_on = function(fromPort, toPort, callback) {
+    this.listen_on = function(fromPort, toPort) {
       var port = s.listen_on(_s, fromPort, toPort);
-      callback(port);
     };
 
     this.add_torrent = function(params) {
@@ -40,11 +42,19 @@ module.exports = function() {
       var th = s.add_torrent(_s, add_torrent_params._get_entry());
       return new TorrentHandle(th);
     };
+
+    this.start_dht = function() {
+      return s.start_dht(_s);
+    };
+
+    this.add_port_forwarding = function(_min, _max) {
+      return s.add_port_forwarding(_s, _min, _max);
+    };
+
+    this.listen_port = function() {
+      return s.listen_port(_s);
+    };
   };
 
-  var libtorrent = {
-    Session: Session
-  };
-
-  return libtorrent;
+  return Session;
 }();
