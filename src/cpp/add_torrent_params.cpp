@@ -10,7 +10,7 @@ extern "C" {
   }
 
   void set_ti(add_torrent_params *p, boost::intrusive_ptr<torrent_info> *ti) {
-    p->ti = *ti;
+    p->ti = &*ti;
   }
   void set_info_hash(add_torrent_params *p, const char* info_hash) {
     sha1_hash ih(info_hash);
@@ -55,5 +55,10 @@ extern "C" {
   void set_download_limit(add_torrent_params *p, int data) {
     p->download_limit = data;
   }
-
+  void set_seed_mode(add_torrent_params *p, bool data) {
+    p->seed_mode = data;
+  }
+  void set_flags(add_torrent_params *p, boost::uint64_t data) {
+    p->flags = data;
+  }
 }

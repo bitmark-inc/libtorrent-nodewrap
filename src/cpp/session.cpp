@@ -25,172 +25,72 @@ using namespace std;
 
 extern "C" {
 
-  /* START Wrap get torrent object in pointer */
-
-  struct session_status_ovr
+  enum listen_on_flags_t
   {
-    bool has_incoming_connections;
-    int upload_rate;
-    int download_rate;
-    size_type total_download;
-    size_type total_upload;
-    utp_status utp_stats;
-    std::vector<dht_lookup> active_requests;
+    listen_no_system_port,
   };
 
-  session* get_session_ptr()
+  enum options_t
+  {
+    delete_files,
+  };
+
+  enum session_flags_t
+  {
+    add_default_plugins,
+    start_default_features,
+  };
+
+  enum protocol_type
+  {
+    udp,
+    tcp,
+  };
+
+  /* START Constructor */
+  session* new_session()
   {
     return new session();
   }
 
-  add_torrent_params* get_add_torrent_params_ptr() {
-    return new add_torrent_params();
-  }
+  // session* new_session_1(fingerprint const& print = fingerprint("LT"
+  //     , LIBTORRENT_VERSION_MAJOR, LIBTORRENT_VERSION_MINOR, 0, 0)
+  //     , int flags = start_default_features | add_default_plugins
+  //     , boost::uint32_t alert_mask = alert::error_notification) {
+  //   return new session(fingerprint, flags, alert_mask);
+  // }
 
-  cache_status* get_cache_status_ptr() {
-    return new cache_status();
-  }
+  // session* new_session_2(fingerprint const& print
+  //     , int _min
+  //     , int _max
+  //     , char const* listen_interface = "0.0.0.0"
+  //     , int flags = start_default_features | add_default_plugins
+  //     , int alert_mask = alert::error_notification) {
+  //   std::pair<int, int> listen_port_range = std::make_pair(_min, _max);
+  //   return new session(fingerprint, listen_port_range, listen_interface, flags, alert_mask);
+  // }
 
-  session_proxy* get_session_proxy_ptr() {
-    return new session_proxy();
-  }
-
-  dht_lookup* get_dht_lookup_ptr() {
-    return new dht_lookup();
-  }
-
-  dht_routing_bucket* get_dht_routing_bucket_ptr() {
-    return new dht_routing_bucket();
-  }
-
-  utp_status* get_utp_status_ptr() {
-    return new utp_status();
-  }
-
-  session_status get_session_status_ptr(session *s) {
-    // return new session_status(s->status());
-    // session_status ss = s->status();
-    // session_status_ovr sso;
-
-    // sso.has_incoming_connections = true;
-    // sso.upload_rate = ss.upload_rate;
-    // sso.download_rate = ss.download_rate;
-    // sso.total_download = ss.total_download;
-    // sso.total_upload = 10;
-    // sso.utp_stats = ss.utp_stats;
-    // sso.active_requests = ss.active_requests;
-    return s->status();
-  }
-
-  boost::intrusive_ptr<torrent_info>* get_torrent_ptr()
-  {
-    return new boost::intrusive_ptr<torrent_info>();
-  }
-
-  sha1_hash* get_torrent_index()
-  {
-    sha1_hash *index;
-    return index;
-  }
-
-  /* END Wrap get torrent object in pointer */
+  /* END Constructor */
 
   int stop_session(session *s) {
     delete s;
     return 0;
   }
 
-  int listen_on(session *ses, int min_, int max_)
+  int listen_on(session *ses, int _min, int _max)
   {
     libtorrent::error_code ec;
-    ses->listen_on(std::make_pair(min_, max_), ec);
+    ses->listen_on(std::make_pair(_min, _max), ec);
     return ses->listen_port();
   }
 
-  /*
-    Create torrent file and add seeding it
-    @ses - session: the pointer hold main session
-    @info - boost::intrusive_ptr<torrent_info>
-    @infile - string: path of torrent file
-    @outpath - string: path of output file
-    @creator - string: who created this torrent (seeder)
-    @comment - string: Quick look about this torrent
-  */
-  torrent_handle* add_torrent(
-    session *ses
-    , boost::intrusive_ptr<torrent_info> *info
-    , const char* infile
-    , const char* outpath
-    , const char* creator
-    , const char* comment)
-  {
-
-    // Read file storage
-    std::cout << infile << std::endl;
-    file_storage fs;
-    add_files(fs, infile);
-
-    if (fs.num_files() > 0)
-    {
-      std::cout << "Added " << fs.num_files() << " into the Torrent" << std::endl;
-    }
-
-    // create torrent object
-    create_torrent t(fs);
-    t.set_creator(creator);
-    t.set_comment(comment);
-    set_piece_hashes(t, outpath);
-
-    // create bencode
-    std::vector<char> torrentBuffer;
-    bencode(back_inserter(torrentBuffer), t.generate());
-
+  torrent_handle* add_torrent(session *ses, add_torrent_params *p) {
     libtorrent::error_code ec;
-
-    // create torrent_info
-    *info = new torrent_info(&torrentBuffer[0], torrentBuffer.size(), ec);
+    torrent_handle th = ses->add_torrent(*p, ec);
     if (ec) {
-      std::cout << ec.message();
+      std::cout << ec.message() << std::endl;
     }
-
-    // set value for torrent_params
-    add_torrent_params p;
-    p.save_path = outpath;
-    p.ti = *info;
-    p.seed_mode = true;
-
-    // add torrent
-    torrent_handle th = ses->add_torrent(p, ec);
-    if (ec) {
-      std::cout << ec.message();
-    }
-
-    // print magnet_uri
-    const char *magnet = make_magnet_uri(th).c_str();
-    std::cout << magnet << std::endl;
-
     return new torrent_handle(th);
-  }
-
-  torrent_handle* add_torrent_by_maget_uri(session *ses, char* savepath, char* magnet_uri) {
-
-    std::cout << savepath << std::endl;
-    std::cout << magnet_uri << std::endl;
-    add_torrent_params p;
-    p.save_path = savepath;
-    p.url = magnet_uri;
-    torrent_handle th = ses->add_torrent(p);
-
-    return new torrent_handle(th);
-  }
-
-  int add_url_seed(torrent_handle *th, char *url_seed) {
-    th->add_url_seed(url_seed);
-    return 0;
-  }
-
-  char* get_name(torrent_handle *th) {
-    return (char*)th->name().c_str();
   }
 
   int start_dht(session *ses)
@@ -230,29 +130,6 @@ extern "C" {
 
   int get_torrent_state(torrent_handle *th) {
     return th->status().state;
-  }
-
-  char* create_magnet_uri(const char* infile, const char* outpath) {
-
-    file_storage fs;
-    add_files(fs, infile);
-
-    create_torrent t(fs);
-    t.set_creator("");
-    t.set_comment("");
-    set_piece_hashes(t, outpath);
-
-    std::vector<char> torrentBuffer;
-    bencode(back_inserter(torrentBuffer), t.generate());
-
-    libtorrent::error_code ec;
-    torrent_info* info = new torrent_info(&torrentBuffer[0], torrentBuffer.size(), ec);
-    if (ec) {
-      std::cout << ec.message();
-    }
-
-    std::string magnetUrl = make_magnet_uri(*info);
-    return strdup(magnetUrl.c_str());
   }
 
   char* get_info_hash(torrent_handle *th) {

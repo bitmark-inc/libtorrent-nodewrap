@@ -37,6 +37,10 @@ module.exports = function() {
     this.create_magnet_uri = function() {
       return ti.create_magnet_uri(_ti);
     };
+
+    this.get_entry = function() {
+      return _ti;
+    }
   }
 
   return TorrentInfo;

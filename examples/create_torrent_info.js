@@ -26,7 +26,7 @@ console.log('Create torrent_file');
 var torrent_file = create_torrent.generate();
 var torrent_info1 = new TorrentInfo(torrent_file);
 
-// console.log('Create magnet_link');
+console.log('Create magnet_link');
 var magnet_link = torrent_info1.create_magnet_uri()
 console.log('magnet link = ', magnet_link);
 
