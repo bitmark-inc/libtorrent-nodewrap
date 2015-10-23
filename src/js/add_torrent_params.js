@@ -29,58 +29,106 @@ module.exports = function() {
 
   var AddTorrentParams = function() {
 
-    // new add_torrent_params
+    this._get_entry = function() {
+      return _p;
+    };
+
+    var _self = this;
+
+    Object.defineProperties(_self, {
+
+      // Create setter function for AddTorrentParam;
+      ti: {
+        set: function(torrent_info_ptr) {
+          add_torrent_params.set_ti(_p, torrent_info_ptr._get_entry());
+        }
+      },
+      save_path: {
+        set: function(data) {
+          add_torrent_params.set_save_path(_p, data);
+        }
+      },
+      url: {
+        set: function(magnet_link) {
+          add_torrent_params.set_url(_p, magnet_link);
+        }
+      },
+      info_hash: {
+        set: function(info_hash) {
+          add_torrent_params.set_url(_p, info_hash);
+        }
+      },
+      version: {
+        set: function(data) {
+          add_torrent_params.set_version(_p, data);
+        }
+      },
+      name: {
+        set: function(data) {
+          add_torrent_params.set_name(_p, data);
+        }
+      },
+      seed_mode: {
+        set: function(data) {
+          add_torrent_params.set_seed_mode(_p, data);
+        }
+      },
+      trackerid: {
+        set: function(data) {
+          add_torrent_params.set_trackerid(_p, data);
+        }
+      },
+      uuid: {
+        set: function(data) {
+          add_torrent_params.set_uuid(_p, data);
+        }
+      },
+      source_feed_url: {
+        set: function(data) {
+          add_torrent_params.set_source_feed_url(_p, data);
+        }
+      },
+      flags: {
+        set: function(data) {
+          add_torrent_params.set_flags(_p, data);
+        }
+      },
+      max_uploads: {
+        set: function(data) {
+          add_torrent_params.set_max_uploads(_p, data);
+        }
+      },
+      max_connections: {
+        set: function(data) {
+          add_torrent_params.set_max_connections(_p, data);
+        }
+      },
+      upload_limit: {
+        set: function(data) {
+          add_torrent_params.set_upload_limit(_p, data);
+        }
+      },
+      download_limit: {
+        set: function(data) {
+          add_torrent_params.set_download_limit(_p, data);
+        }
+      }
+    });
+
     var _p = add_torrent_params.new_add_torrent_params();
 
-    this.get_entry = function() {
-      return _p;
-    }
-    this.set_ti = function(torrent_info_ptr) {
-      add_torrent_params.set_ti(_p, torrent_info_ptr);
-    }
-    this.set_url = function(magnet_link) {
-      add_torrent_params.set_url(_p, magnet_link);
+    // Initial data when user passing an JSON object
+    if (arguments.length == 1){
+      var jsonObj = arguments[0];
+
+      // fetch all of properties of input param and set for add_torrent_params object
+      for(var key in jsonObj) {
+        if (key in _self) {
+          _self[key] = jsonObj[key];
+        };
+      };
     };
-    this.set_info_hash = function(info_hash) {
-      add_torrent_params.set_url(_p, info_hash);
-    };
-    this.set_version = function(data) {
-      add_torrent_params.set_version(_p, data);
-    };
-    this.set_name = function(data) {
-      add_torrent_params.set_name(_p, data);
-    };
-    this.set_save_path = function(data) {
-      add_torrent_params.set_save_path(_p, data);
-    };
-    this.set_seed_mode = function(data) {
-      add_torrent_params.set_seed_mode(_p, data);
-    }
-    this.set_trackerid = function(data) {
-      add_torrent_params.set_trackerid(_p, data);
-    };
-    this.set_uuid = function(data) {
-      add_torrent_params.set_uuid(_p, data);
-    };
-    this.set_source_feed_url = function(data) {
-      add_torrent_params.set_source_feed_url(_p, data);
-    };
-    this.set_flags = function(data) {
-      add_torrent_params.set_flags(_p, data);
-    };
-    this.set_max_uploads = function(data) {
-      add_torrent_params.set_max_uploads(_p, data);
-    };
-    this.set_max_connections = function(data) {
-      add_torrent_params.set_max_connections(_p, data);
-    };
-    this.set_upload_limit = function(data) {
-      add_torrent_params.set_upload_limit(_p, data);
-    };
-    this.set_download_limit = function(data) {
-      add_torrent_params.set_download_limit(_p, data);
-    };
-  }
+  };
 
   return AddTorrentParams;
 }();

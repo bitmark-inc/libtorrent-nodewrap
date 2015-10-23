@@ -10,20 +10,20 @@ session.listen_on(6882, 6882, function(port) {
   console.log('Torrent client are literning at port: ' + port);
 
   var file_storage = new FileStorage();
-  var infile = '/home/vagrant/libtorrent/examples/data';
-  var outpath = '/home/vagrant/libtorrent/examples';
+  var dataPath = '/home/vagrant/libtorrent/examples/data';
+  var pieceHashPath = '/home/vagrant/libtorrent/examples';
 
   // add files into file_storage
   console.log('--------------------------------------');
   console.log('Create torrent_info from torrent_entry');
-  file_storage.add_file(infile);
+  file_storage.add_file(dataPath);
 
   console.log('File Name:', file_storage.file_name_ptr(0));
   console.log('Number of files:', file_storage.num_files());
 
   // create torrent
   console.log('Create create_torrent');
-  var create_torrent = new CreateTorrent(file_storage.get_entry());
+  var create_torrent = new CreateTorrent(file_storage);
   create_torrent.set_comment('Comment');
   create_torrent.set_creator('Creator');
 
@@ -37,13 +37,23 @@ session.listen_on(6882, 6882, function(port) {
   console.log('magnet link = ', magnet_link);
 
   console.log('--------------Add Torrent Param------------------------');
-  var params = new AddTorrentParam();
-  params.set_ti(torrent_info.get_entry());
-  params.set_save_path(outpath);
-  params.set_seed_mode(true);
+  // var params = new AddTorrentParam({
+  //   ti: torrent_info,
+  //   save_path: pieceHashPath,
+  //   seed_mode: true,
+  // });
+  // var params = new AddTorrentParam();
+  // params.ti = torrent_info;
+  // params.save_path = pieceHashPath;
+  // params.seed_mode = true;
 
   console.log('--------------Add Torrent Into the session and Seed------------------------');
-  var torrent_handle = session.add_torrent(params.get_entry());
+  // var torrent_handle = session.add_torrent(params);
+  var torrent_handle = session.add_torrent({
+    ti: torrent_info,
+    save_path: pieceHashPath,
+    seed_mode: true,
+  });
   console.log(torrent_handle.is_valid());
   var buff = new Buffer(torrent_handle.info_hash(), 'base64');
   console.log(buff.toString());

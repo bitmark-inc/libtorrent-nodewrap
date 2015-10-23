@@ -21,7 +21,7 @@ module.exports = function() {
   });
 
   var CreateTorrent = function(file_storage) {
-    var _ct = ct.new_create_torrent(file_storage);
+    var _ct = ct.new_create_torrent(file_storage._get_entry());
 
     this.set_piece_hashes = function(outpath) {
       ct.set_piece_hashes(_ct, outpath);

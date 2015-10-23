@@ -14,7 +14,7 @@ console.log('Number of files:', file_storage.num_files());
 
 // create torrent
 console.log('Create create_torrent');
-var create_torrent = new CreateTorrent(file_storage.get_entry());
+var create_torrent = new CreateTorrent(file_storage);
 create_torrent.set_comment('Comment');
 create_torrent.set_creator('Creator');
 

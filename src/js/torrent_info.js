@@ -21,7 +21,6 @@ module.exports = function() {
     var _ti;
 
     // Check condition to mapping constructor function
-    console.log('Number of arguments', arguments.length);
     if (arguments.length == 1) {
       _ti = ti.new_torrent_info_entry(arguments[0]);
     } else if (arguments.length == 2){
@@ -38,7 +37,7 @@ module.exports = function() {
       return ti.create_magnet_uri(_ti);
     };
 
-    this.get_entry = function() {
+    this._get_entry = function() {
       return _ti;
     }
   }

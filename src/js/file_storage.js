@@ -24,7 +24,7 @@ module.exports = function() {
     var _fs = fs.new_file_storage();
 
     // Setter functions
-    this.get_entry = function() {
+    this._get_entry = function() {
       return _fs;
     };
     this.rename_file = function(new_filename) {
@@ -32,8 +32,8 @@ module.exports = function() {
     };
 
     // getter functions
-    this.add_file = function(infile) {
-      fs.add_file_ipml(_fs, infile);
+    this.add_file = function(dataPath) {
+      fs.add_file_ipml(_fs, dataPath);
     };
     this.file_name_ptr = function(index) {
       return fs.file_name_ptr(_fs, index);
