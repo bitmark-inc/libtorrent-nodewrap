@@ -46,7 +46,8 @@ create_torrent2.set_creator('Creator');
 
 // Generate Torrent file
 console.log('Get bencode from create_torrent2');
-var bencode = create_torrent2.bencode(outpath);
+create_torrent2.set_piece_hashes(outpath);
+var bencode = create_torrent2.bencode();
 var torrent_info2 = new TorrentInfo(bencode, bencode.length, 0);
 
 // console.log('Create magnet_link');

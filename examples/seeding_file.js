@@ -11,7 +11,7 @@ session.listen_on(6882, 6882, function(port) {
 
   var file_storage = new FileStorage();
   var infile = '/home/vagrant/libtorrent/examples/data';
-  var outpath = path.resolve(__dirname);
+  var outpath = '/home/vagrant/libtorrent/examples';
 
   // add files into file_storage
   console.log('--------------------------------------');
@@ -39,7 +39,7 @@ session.listen_on(6882, 6882, function(port) {
   console.log('--------------Add Torrent Param------------------------');
   var params = new AddTorrentParam();
   params.set_ti(torrent_info.get_entry());
-  params.set_save_path('./');
+  params.set_save_path(outpath);
   params.set_seed_mode(true);
 
   console.log('--------------Add Torrent Into the session and Seed------------------------');

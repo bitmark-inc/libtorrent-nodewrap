@@ -11,9 +11,11 @@ extern "C" {
     return new create_torrent(t);
   }
 
-  std::vector<char>* bencode(create_torrent* ct, char const* outpath) {
+  void set_piece_hashes(create_torrent* ct, char const* outpath) {
     set_piece_hashes(*ct, outpath);
+  }
 
+  std::vector<char>* bencode(create_torrent* ct) {
     std::vector<char> torrentBuffer;
     bencode(back_inserter(torrentBuffer), ct->generate());
 

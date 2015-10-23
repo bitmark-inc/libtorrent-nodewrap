@@ -10,11 +10,11 @@ module.exports = function() {
 
   var ct = ffi.Library(path.resolve(root_dir, 'src/cpp/create_torrent'), {
     'new_create_torrent': [ 'pointer', ['pointer'] ],
-    'bencode': ['pointer', ['pointer', 'CString']],
+    'set_piece_hashes': ['void', ['pointer', 'CString']],
+    'bencode': ['pointer', ['pointer']],
     'generate': ['pointer', ['pointer']],
     'set_comment': ['void', ['pointer', 'CString']],
     'set_creator': ['void', ['pointer', 'CString']],
-    // 'set_hash': ['void', ['pointer', 'CString']], TODO
     // 'set_file_hash': ['void', ['pointer', 'CString']], TODO
     'add_url_seed': ['void', ['pointer', 'CString']],
     'add_http_seed': ['void', ['pointer', 'CString']],
@@ -23,8 +23,12 @@ module.exports = function() {
   var CreateTorrent = function(file_storage) {
     var _ct = ct.new_create_torrent(file_storage);
 
-    this.bencode = function(outpath) {
-      var bencode = ct.bencode(_ct, outpath);
+    this.set_piece_hashes = function(outpath) {
+      ct.set_piece_hashes(_ct, outpath);
+    };
+
+    this.bencode = function() {
+      var bencode = ct.bencode(_ct);
       return bencode;
     };
 
