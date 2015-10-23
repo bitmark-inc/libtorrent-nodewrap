@@ -1,9 +1,7 @@
 var path = require('path');
-var FileStorage = require('../src/js/file_storage');
-var CreateTorrent = require('../src/js/create_torrent');
-var TorrentInfo = require('../src/js/torrent_info');
+var libtorrent = require('../src/js/libtorrent');
 
-var file_storage = new FileStorage();
+var file_storage = new libtorrent.file_storage();
 var infile = '/home/vagrant/libtorrent/examples/data';
 var outpath = path.resolve(__dirname);
 
@@ -17,14 +15,14 @@ console.log('Number of files:', file_storage.num_files());
 
 // create torrent
 console.log('Create create_torrent');
-var create_torrent = new CreateTorrent(file_storage);
+var create_torrent = new libtorrent.create_torrent(file_storage);
 create_torrent.set_comment('Comment');
 create_torrent.set_creator('Creator');
 
 // Generate Torrent file
 console.log('Create torrent_file');
 var torrent_file = create_torrent.generate();
-var torrent_info1 = new TorrentInfo(torrent_file);
+var torrent_info1 = new libtorrent.torrent_info(torrent_file);
 
 console.log('Create magnet_link');
 var magnet_link = torrent_info1.create_magnet_uri()
@@ -40,7 +38,7 @@ console.log('Number of files:', file_storage.num_files());
 
 // create torrent
 console.log('Create create_torrent');
-var create_torrent2 = new CreateTorrent(file_storage);
+var create_torrent2 = new libtorrent.create_torrent(file_storage);
 create_torrent2.set_comment('Comment');
 create_torrent2.set_creator('Creator');
 
@@ -48,7 +46,7 @@ create_torrent2.set_creator('Creator');
 console.log('Get bencode from create_torrent2');
 create_torrent2.set_piece_hashes(outpath);
 var bencode = create_torrent2.bencode();
-var torrent_info2 = new TorrentInfo(bencode, bencode.length, 0);
+var torrent_info2 = new libtorrent.torrent_info(bencode, bencode.length, 0);
 
 // console.log('Create magnet_link');
 var magnet_link = torrent_info2.create_magnet_uri()
@@ -58,7 +56,7 @@ console.log('--------------------------------------');
 
 infile = '/home/vagrant/libtorrent/examples/data/sample.torrent';
 console.log('Create torrent_info from filename');
-var torrent_info3 = new TorrentInfo(infile, 0);
+var torrent_info3 = new libtorrent.torrent_info(infile, 0);
 
 // console.log('Create magnet_link');
 var magnet_link = torrent_info3.create_magnet_uri()

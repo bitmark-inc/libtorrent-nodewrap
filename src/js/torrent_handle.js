@@ -1,6 +1,5 @@
 var ffi = require('ffi');
 var path = require('path');
-var external_lib = require('./load_external_library');
 var TorrentStatus = require('./torrent_status');
 
 // get root dir

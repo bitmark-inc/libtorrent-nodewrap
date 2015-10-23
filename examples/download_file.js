@@ -1,8 +1,7 @@
-var session = require('../src/js/session');
-var AddTorrentParam = require('../src/js/add_torrent_params');
+var libtorrent = require('../src/js/libtorrent');
 var path = require('path');
 
-var session = new session.Session();
+var session = new libtorrent.session();
 
 var pieceHashPath = '/home/vagrant/libtorrent/examples';
 // var magnet_uri = 'magnet:?xt=urn:btih:61e7f76315bb2fbd93962a830b7725ea639763ea&dn=precise64.box';
@@ -11,10 +10,10 @@ var magnet_uri = 'magnet:?xt=urn:btih:cc72be311856ee187f900e67c69e3c8504c07c7e';
 
 
 console.log('--------------Add Torrent Param------------------------');
-var params = new AddTorrentParam();
-params.set_url(magnet_uri);
-params.set_save_path(pieceHashPath);
-params.set_seed_mode(true);
+var params = new libtorrent.add_torrent_params();
+params.url = magnet_uri;
+params.save_path = pieceHashPath;
+params.seed_mode = true;
 
 console.log('--------------Add Torrent Into the session and Seed------------------------');
 var torrent_handle = session.add_torrent(params);

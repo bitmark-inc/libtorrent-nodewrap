@@ -1,16 +1,12 @@
-var Session = require('../src/js/session');
-var FileStorage = require('../src/js/file_storage');
-var CreateTorrent = require('../src/js/create_torrent');
-var TorrentInfo = require('../src/js/torrent_info');
-var AddTorrentParam = require('../src/js/add_torrent_params');
+var libtorrent = require('../src/js/libtorrent');
 var path = require('path');
 
-var session = new Session();
+var session = new libtorrent.session();
 session.listen_on(6882, 6882);
 
 console.log('Torrent client are literning at port: ' + session.listen_port());
 
-var file_storage = new FileStorage();
+var file_storage = new libtorrent.file_storage();
 var dataPath = '/home/vagrant/libtorrent/examples/data';
 var pieceHashPath = '/home/vagrant/libtorrent/examples';
 
@@ -24,14 +20,14 @@ console.log('Number of files:', file_storage.num_files());
 
 // create torrent
 console.log('Create create_torrent');
-var create_torrent = new CreateTorrent(file_storage);
+var create_torrent = new libtorrent.create_torrent(file_storage);
 create_torrent.set_comment('Comment');
 create_torrent.set_creator('Creator');
 
 // Generate Torrent file
 console.log('Create torrent_file');
 var torrent_file = create_torrent.generate();
-var torrent_info = new TorrentInfo(torrent_file);
+var torrent_info = new libtorrent.torrent_info(torrent_file);
 
 console.log('Create magnet_link');
 var magnet_link = torrent_info.create_magnet_uri()

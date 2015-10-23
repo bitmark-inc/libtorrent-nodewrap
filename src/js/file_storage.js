@@ -1,6 +1,5 @@
 var ffi = require('ffi');
 var path = require('path');
-var external_lib = require('./load_external_library');
 
 // get root dir
 var root_dir = __dirname.replace('/src/js', '/');
