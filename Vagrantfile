@@ -35,12 +35,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Data folder
   config.vm.synced_folder "./", "/home/vagrant/libtorrent"
 
-  config.ssh.username = "vagrant"
-  config.ssh.password = "vagrant"
+  # config.ssh.username = "vagrant"
+  # config.ssh.password = "vagrant"
 
-  config.vm.provider "virtualbox" do |vb|
-    vb.gui = true
-  end
+  # config.vm.provider "virtualbox" do |vb|
+  #   vb.gui = true
+  # end
 
   if defined?(SHARED_BOX_URL)
     config.vm.box = "amaryllis-amaryllis"

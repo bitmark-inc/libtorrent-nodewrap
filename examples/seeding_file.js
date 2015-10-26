@@ -54,6 +54,12 @@ var torrent_handle = session.add_torrent({
 console.log(torrent_handle.is_valid());
 var buff = new Buffer(torrent_handle.info_hash(), 'base64');
 console.log(buff.toString());
+
+
+console.log('--------------Add Torrent Torrent extension into the session------------------------');
+// var torrent_handle = session.add_torrent(params);
+var torrent_handle = session.add_extension();
+
 console.log('Seeding ..... ');
 
 setTimeout(function() {

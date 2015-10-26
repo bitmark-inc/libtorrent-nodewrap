@@ -15,7 +15,8 @@ module.exports = function() {
     'add_torrent': [ 'pointer', ['pointer', 'pointer'] ],
     'start_dht': [ 'int', ['pointer'] ],
     'add_port_forwarding': [ 'int', ['pointer', 'int', 'int'] ],
-    'listen_port': [ 'short', ['pointer'] ]
+    'listen_port': [ 'short', ['pointer'] ],
+    'add_extension': [ 'void', ['pointer'] ]
   });
 
   var Session = function() {
@@ -52,6 +53,10 @@ module.exports = function() {
 
     this.listen_port = function() {
       return s.listen_port(_s);
+    };
+
+    this.add_extension = function() {
+      s.add_extension(_s);
     };
   };
 
