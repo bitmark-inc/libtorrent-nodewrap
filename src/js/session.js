@@ -16,7 +16,7 @@ module.exports = function() {
     'start_dht': [ 'int', ['pointer'] ],
     'add_port_forwarding': [ 'int', ['pointer', 'int', 'int'] ],
     'listen_port': [ 'short', ['pointer'] ],
-    'add_extension': [ 'void', ['pointer'] ]
+    // 'add_extension': [ 'void', ['pointer'] ]
   });
 
   var Session = function() {
@@ -55,9 +55,9 @@ module.exports = function() {
       return s.listen_port(_s);
     };
 
-    this.add_extension = function() {
-      s.add_extension(_s);
-    };
+    // this.add_extension = function() {
+    //   s.add_extension(_s);
+    // };
   };
 
   return Session;

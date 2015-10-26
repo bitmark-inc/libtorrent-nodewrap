@@ -6,7 +6,8 @@ if [[ $OSTYPE == darwin* ]]; then
 
   echo "link libtorrent-rasterbar"
   cd src/cpp
-  install_name_tool -change libboost_system.dylib @loader_path/../../libboost_system.dylib libboost_thread.dylib
+  install_name_tool -change libboost_thread.dylib @loader_path/libboost_thread.dylib libboost_thread.dylib
+  install_name_tool -change libboost_system.dylib @loader_path/libboost_system.dylib libboost_thread.dylib
   install_name_tool -change libboost_system.dylib @loader_path/libboost_system.dylib libtorrent-rasterbar.8.dylib
 
   echo "link libtorrent wrap"

@@ -56,18 +56,18 @@ extern "C" {
     ct->set_root_cert(pem);
   }
   bool priv(create_torrent* ct) {
-    ct->priv();
+    return ct->priv();
   }
   void set_priv(create_torrent* ct, bool p) {
     ct->set_priv(p);
   }
   int num_pieces(create_torrent* ct) {
-    ct->num_pieces();
+    return ct->num_pieces();
   }
   int piece_length(create_torrent* ct) {
-    ct->piece_length();
+    return ct->piece_length();
   }
   int piece_size(create_torrent* ct, int i) {
-    ct->piece_size(i);
+    return ct->piece_size(i);
   }
 }
