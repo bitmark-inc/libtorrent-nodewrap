@@ -1,7 +1,8 @@
 var ffi = require('ffi');
 var path = require('path');
 var TorrentHandle = require('./torrent_handle');
-var AddTorrentParam = require('./add_torrent_params')
+var AddTorrentParam = require('./add_torrent_params');
+var ExtensionImpl = require('./extension_impl');
 
 // get root dir
 var root_dir = __dirname.replace('/src/js', '/');
@@ -16,7 +17,7 @@ module.exports = function() {
     'start_dht': [ 'int', ['pointer'] ],
     'add_port_forwarding': [ 'int', ['pointer', 'int', 'int'] ],
     'listen_port': [ 'short', ['pointer'] ],
-    // 'add_extension': [ 'void', ['pointer'] ]
+    'add_extension': [ 'void', ['pointer', 'pointer'] ]
   });
 
   var Session = function() {
@@ -55,9 +56,11 @@ module.exports = function() {
       return s.listen_port(_s);
     };
 
-    // this.add_extension = function() {
-    //   s.add_extension(_s);
-    // };
+    this.add_extension = function() {
+      var extension_impl = new ExtensionImpl();
+      var peer_data = extension_impl.new_peer_data();
+      s.add_extension(_s, peer_data);
+    };
   };
 
   return Session;

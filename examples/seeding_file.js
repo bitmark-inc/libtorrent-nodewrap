@@ -7,10 +7,10 @@ session.listen_on(6882, 6882);
 console.log('Torrent client are literning at port: ' + session.listen_port());
 
 var file_storage = new libtorrent.file_storage();
-// var dataPath = '/home/vagrant/libtorrent/examples/data';
-// var pieceHashPath = '/home/vagrant/libtorrent/examples';
-var dataPath = '/Users/thinhuockim/Documents/project/bitmark/libtorrent-nodewrap/examples/data';
-var pieceHashPath = '/Users/thinhuockim/Documents/project/bitmark/libtorrent-nodewrap/examples';
+var dataPath = '/home/vagrant/libtorrent/examples/data';
+var pieceHashPath = '/home/vagrant/libtorrent/examples';
+// var dataPath = '/Users/thinhuockim/Documents/project/bitmark/libtorrent-nodewrap/examples/data';
+// var pieceHashPath = '/Users/thinhuockim/Documents/project/bitmark/libtorrent-nodewrap/examples';
 
 // add files into file_storage
 console.log('--------------------------------------');
@@ -54,13 +54,13 @@ var torrent_handle = session.add_torrent({
   seed_mode: true,
 });
 console.log(torrent_handle.is_valid());
-var buff = new Buffer(torrent_handle.info_hash(), 'base64');
-console.log(buff.toString());
+var info_hash = torrent_handle.info_hash();
+console.log('info_hash::::::', info_hash);
 
 
+session.add_extension();
 console.log('--------------Add Torrent Torrent extension into the session------------------------');
-// var torrent_handle = session.add_torrent(params);
-// var torrent_handle = session.add_extension();
+var torrent_handle = session.add_torrent(params);
 
 console.log('Seeding ..... ');
 

@@ -1,4 +1,4 @@
-// var external_lib = require('./load_external_library');
+var external_lib = require('./load_external_library');
 
 module.exports = {
   session: require('./session'),
@@ -8,4 +8,5 @@ module.exports = {
   torrent_handle: require('./torrent_handle'),
   torrent_status: require('./torrent_status'),
   create_torrent: require('./create_torrent'),
+  extension_impl: require('./extension_impl')
 }

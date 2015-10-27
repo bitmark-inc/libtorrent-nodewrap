@@ -18,11 +18,6 @@
 #include "libtorrent/file_pool.hpp"
 #include "libtorrent/magnet_uri.hpp"
 #include "libtorrent/session.hpp"
-#include "libtorrent/torrent_handle.hpp"
-
-// include project
-// #include "extention/bitmark_extension.cpp"
-// #include "extention/bitmark_metadata.hpp"
 
 using namespace libtorrent;
 using namespace std;
@@ -126,13 +121,12 @@ extern "C" {
     return ses->listen_port();
   }
 
-  // void add_extension(session *ses) {
-  //   bitmark_extension be;
-  //   const std::string msg = "Test_extension";
-  //   be.set_extension(msg);
+  void add_extension(session *ses, peer_data *pd) {
+    const std::string msg = "Test_extension";
+    pd->set_peer_data(msg);
 
-  //   set_bitmark_extension(&be);
-  //   //add plug in
-  //   ses->add_extension(&create_bitmark_metadata_plugin);
-  // }
+    set_bitmark_extension(pd);
+    //add plug in
+    ses->add_extension(&create_bitmark_metadata_plugin);
+  }
 }
