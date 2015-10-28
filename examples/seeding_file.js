@@ -46,6 +46,15 @@ console.log('--------------Add Torrent Param------------------------');
 // params.save_path = pieceHashPath;
 // params.seed_mode = true;
 
+console.log('--------------Add Torrent Torrent extension into the session------------------------');
+var peer_data = new libtorrent.peer_data();
+console.log(peer_data);
+peer_data.set_peer_data('Bitmark Message');
+
+// var plugin = new libtorrent.plugin();
+// plugin.set_bitmark_peer_data(peer_data);
+session.add_extension(peer_data);
+
 console.log('--------------Add Torrent Into the session and Seed------------------------');
 // var torrent_handle = session.add_torrent(params);
 var torrent_handle = session.add_torrent({
@@ -56,11 +65,6 @@ var torrent_handle = session.add_torrent({
 console.log(torrent_handle.is_valid());
 var info_hash = torrent_handle.info_hash();
 console.log('info_hash::::::', info_hash);
-
-
-session.add_extension();
-console.log('--------------Add Torrent Torrent extension into the session------------------------');
-var torrent_handle = session.add_torrent(params);
 
 console.log('Seeding ..... ');
 

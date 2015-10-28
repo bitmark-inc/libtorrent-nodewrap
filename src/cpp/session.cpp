@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <boost/thread.hpp>
+#include <boost/function.hpp>
 
 #include <sys/types.h>
 #include <unistd.h>
@@ -19,7 +20,11 @@
 #include "libtorrent/magnet_uri.hpp"
 #include "libtorrent/session.hpp"
 
+#include "bitmark_plugin/bitmark_plugin.hpp"
+#include "bitmark_plugin/bitmark_peer_data.hpp"
+
 using namespace libtorrent;
+using namespace bitmark;
 using namespace std;
 
 extern "C" {
@@ -121,12 +126,10 @@ extern "C" {
     return ses->listen_port();
   }
 
-  void add_extension(session *ses, peer_data *pd) {
-    const std::string msg = "Test_extension";
-    pd->set_peer_data(msg);
-
-    set_bitmark_extension(pd);
+  void add_extension(session *ses, bitmark_peer_data *bpd) {
     //add plug in
-    ses->add_extension(&create_bitmark_metadata_plugin);
+    bitmark_plugin bp;
+    bp.set_bitmark_peer_data(bpd);
+    ses->add_extension(bp.get_create_bitmark_plugin_function());
   }
 }

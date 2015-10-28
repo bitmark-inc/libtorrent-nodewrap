@@ -2,7 +2,6 @@ var ffi = require('ffi');
 var path = require('path');
 var TorrentHandle = require('./torrent_handle');
 var AddTorrentParam = require('./add_torrent_params');
-var ExtensionImpl = require('./extension_impl');
 
 // get root dir
 var root_dir = __dirname.replace('/src/js', '/');
@@ -56,10 +55,8 @@ module.exports = function() {
       return s.listen_port(_s);
     };
 
-    this.add_extension = function() {
-      var extension_impl = new ExtensionImpl();
-      var peer_data = extension_impl.new_peer_data();
-      s.add_extension(_s, peer_data);
+    this.add_extension = function(peer_data) {
+      s.add_extension(_s, peer_data._get_entry());
     };
   };
 

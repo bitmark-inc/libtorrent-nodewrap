@@ -85,29 +85,29 @@ namespace libtorrent
 
 			virtual bool on_extension_handshake(lazy_entry const& h)
 			{
-				if (h.type() != lazy_entry::dict_t) return false;
-				lazy_entry const* messages = h.dict_find("m");
-				if (!messages || messages->type() != lazy_entry::dict_t) return false;
+				// if (h.type() != lazy_entry::dict_t) return false;
+				// lazy_entry const* messages = h.dict_find("m");
+				// if (!messages || messages->type() != lazy_entry::dict_t) return false;
 
-				std::string signedMessageString = messages->dict_find_string_value(extension_name);
+				// std::string signedMessageString = messages->dict_find_string_value(extension_name);
 
-				bool resultCheck = true;
+				// bool resultCheck = true;
 
-				std::string info_hash = m_torrent.torrent_file().info_hash().to_string();
-				info_hash = bitmark::convert2HexString((unsigned char*)info_hash.c_str(), strlen(info_hash.c_str()));
+				// std::string info_hash = m_torrent.torrent_file().info_hash().to_string();
+				// info_hash = bitmark::convert2HexString((unsigned char*)info_hash.c_str(), strlen(info_hash.c_str()));
 
-				if (signedMessageString.empty()) {
-					resultCheck = false;
-				} else {
-					if (!m_bpd->check_plugin_message(signedMessageString, info_hash)) {
-						resultCheck = false;
-					}
-				}
+				// if (signedMessageString.empty()) {
+				// 	resultCheck = false;
+				// } else {
+				// 	if (!m_bpd->check_plugin_message(signedMessageString, info_hash)) {
+				// 		resultCheck = false;
+				// 	}
+				// }
 
-				if (!resultCheck) {
-					m_pc.disconnect(errors::invalid_message ,0);
-				}
-
+				// if (!resultCheck) {
+				// 	m_pc.disconnect(errors::invalid_message ,0);
+				// }
+				std::cout << "Libtorrent on add_handshake" << std::endl;
 				return true;
 			}
 

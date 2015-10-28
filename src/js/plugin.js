@@ -14,13 +14,13 @@ module.exports = function() {
   });
 
   var ExtensionImpl = function() {
-    var _p = p.new_peer_data();
+    var _p = p.new_bitmark_plugin();
 
     this.set_bitmark_peer_data = function(peer_data) {
       p.set_peer_data(_ei, peer_data);
     };
     this.get_create_bitmark_plugin_function = function() {
-      return p.set_peer_data(_p);
+      return p.get_create_bitmark_plugin_function(_p);
     };
   };
 

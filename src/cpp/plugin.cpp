@@ -1,6 +1,8 @@
 // include C
 #include <boost/shared_ptr.hpp>
-#include "libtorrent/config.hpp"
+#include <boost/bind.hpp>
+#include <boost/unordered_set.hpp>
+#include <libtorrent/entry.hpp>
 
 // include bitmark
 #include "bitmark_plugin/bitmark_peer_data.hpp"

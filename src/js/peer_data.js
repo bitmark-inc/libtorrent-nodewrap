@@ -7,25 +7,25 @@ var root_dir = __dirname.replace('/src/js', '/');
 
 module.exports = function() {
 
-  var ei = ffi.Library(path.resolve(root_dir, 'src/cpp/peer_data'), {
+  var pd = ffi.Library(path.resolve(root_dir, 'src/cpp/peer_data'), {
   	'new_peer_data': ['pointer', []],
   	'set_peer_data': ['void', ['pointer', 'CString']],
-  	'parse_peer_data': ['void', ['pointer']],
-    'new_bitmark_plugin': ['pointer', []],
-    'set_bitmark_peer_data': ['void', ['pointer', 'pointer']],
-    'get_create_bitmark_plugin_function': ['pointer', ['pointer']]
+  	'parse_peer_data': ['void', ['pointer']]
   });
 
-  var ExtensionImpl = function() {
-    var _ei = ei.new_peer_data();
+  var PeerData = function() {
+    var _pd = pd.new_peer_data();
 
+    this._get_entry = function() {
+      return _pd;
+    }
     this.set_peer_data = function(data) {
-      ei.set_peer_data(_ei, data);
+      pd.set_peer_data(_pd, data);
     };
     this.parse_peer_data = function() {
-      ei.set_peer_data(_ei);
+      pd.set_peer_data(_pd);
     };
   };
 
-  return ExtensionImpl;
-}
+  return PeerData;
+}();
