@@ -31,4 +31,7 @@ extern "C" {
     std::string const& url = data;
     handle->add_url_seed(url);
   }
+  char* name(torrent_handle* handle) {
+    return (char*)handle->name().c_str();
+  }
 }

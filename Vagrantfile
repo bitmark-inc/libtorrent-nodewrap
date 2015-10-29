@@ -34,6 +34,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Data folder
   config.vm.synced_folder "./", "/home/vagrant/libtorrent"
+  config.vm.synced_folder "../tweetnacl-nodewrap", "/home/vagrant/tweetnacl-nodewrap"
 
   # config.ssh.username = "vagrant"
   # config.ssh.password = "vagrant"

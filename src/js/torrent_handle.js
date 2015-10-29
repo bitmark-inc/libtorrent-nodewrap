@@ -12,6 +12,7 @@ module.exports = function() {
     'is_valid': [ 'bool', ['pointer'] ],
     'info_hash': [ 'CString', ['pointer'] ],
     'status': [ 'pointer', ['pointer'] ],
+    'name': [ 'pointer', ['CString'] ],
   });
 
 
@@ -37,7 +38,11 @@ module.exports = function() {
 
     this.add_url_seed = function(url) {
       th.add_url_seed(_th, url);
-    }
+    };
+
+    this.name = function() {
+      th.name(_th);
+    };
   };
 
   return TorrentHandle;
