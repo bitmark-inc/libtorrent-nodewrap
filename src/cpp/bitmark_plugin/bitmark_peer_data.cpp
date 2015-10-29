@@ -121,22 +121,21 @@ namespace bitmark
 	}
 
 
-	//==============bitmark_peer_data function
-	void bitmark_peer_data::parse_peer_data() {
-		json_object * joPeerData = json_tokener_parse(m_peer_data.c_str());
-		json_object * joPeerDataSK = json_object_object_get(joPeerData, "secretKey");
-		json_object * joPeerDataPK = json_object_object_get(joPeerData, "publicKey");
-		json_object * joPeerDataSU = json_object_object_get(joPeerData, "serveURL");
-		secret_key = std::string(json_object_get_string(joPeerDataSK));
-		public_key = std::string(json_object_get_string(joPeerDataPK));
-		server_url = std::string(json_object_get_string(joPeerDataSU));
-	}
-
 	std::string bitmark_peer_data::create_plugin_message() {
-		unsigned char * timestamp = (unsigned char *)"BachLX-Bitmark";
-		std::string token_timestamp = convert2HexString(timestamp, strlen((char*)timestamp));
+		std::time_t t = time(0);
+    	std::tm * now = localtime( & t );
+		std::string timestamp;
+		std::stringstream strstream;
+		strstream << (long)now;
+		strstream >> timestamp;
 
+		std::string token_timestamp =
+			convert2HexString((unsigned char *)timestamp.c_str(), strlen((char*)timestamp.c_str()));
 		std::string signedMessage = sign(token_timestamp, secret_key);
+
+		// unsigned char * timestamp = (unsigned char *)"BachlX-Bitmark";
+		// std::string token_timestamp = convert2HexString(timestamp, strlen((char*)timestamp));
+		// std::string signedMessage = sign(token_timestamp, secret_key);
 
 		json_object * jsonObj = json_object_new_object();
 		json_object * jsonSM = json_object_new_string(signedMessage.c_str());
@@ -177,6 +176,7 @@ namespace bitmark
 	}
 
 	bool bitmark_peer_data::check_plugin_message(std::string signData, std::string info_hash) {
+		// return true;
 		std::string dataConfirm = create_confirm_message(signData, info_hash);
 		if (dataConfirm.empty()) {
 			return false;
@@ -185,7 +185,7 @@ namespace bitmark
 		std::string postData("dataExtension=");
 		postData = postData + dataConfirm;
 
-		std::string resultCheck = callServerAPI(bitmark_peer_data::get_server_url(), postData);
+		std::string resultCheck = callServerAPI(server_url, postData);
 		if (resultCheck.empty()) {
 			return false;
 		}

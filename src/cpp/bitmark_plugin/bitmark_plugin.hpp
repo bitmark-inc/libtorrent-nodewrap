@@ -8,7 +8,6 @@
 #endif
 
 #include <boost/shared_ptr.hpp>
-#include <boost/function.hpp>
 #include "libtorrent/config.hpp"
 
 #include "bitmark_peer_data.hpp"

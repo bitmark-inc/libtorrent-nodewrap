@@ -9,8 +9,8 @@ module.exports = function() {
 
   var pd = ffi.Library(path.resolve(root_dir, 'src/cpp/peer_data'), {
   	'new_peer_data': ['pointer', []],
-  	'set_peer_data': ['void', ['pointer', 'CString']],
-  	'parse_peer_data': ['void', ['pointer']]
+  	'set_peer_data': ['void', ['pointer', 'CString', 'CString', 'CString']],
+  	'set_torrent_peer': ['void', ['pointer', 'CString', 'CString']]
   });
 
   var PeerData = function() {
@@ -19,11 +19,11 @@ module.exports = function() {
     this._get_entry = function() {
       return _pd;
     }
-    this.set_peer_data = function(data) {
-      pd.set_peer_data(_pd, data);
+    this.set_peer_data = function(sk, pk, s_url) {
+      pd.set_peer_data(_pd, sk, pk, s_url);
     };
-    this.parse_peer_data = function() {
-      pd.set_peer_data(_pd);
+    this.set_torrent_peer = function(info_hash, seed_ip) {
+      pd.set_torrent_peer(_pd, info_hash, seed_ip);
     };
   };
 

@@ -48,8 +48,6 @@ console.log('--------------Add Torrent Param------------------------');
 
 console.log('--------------Add Torrent Torrent extension into the session------------------------');
 var peer_data = new libtorrent.peer_data();
-console.log(peer_data);
-peer_data.set_peer_data('Bitmark Message');
 
 // var plugin = new libtorrent.plugin();
 // plugin.set_bitmark_peer_data(peer_data);

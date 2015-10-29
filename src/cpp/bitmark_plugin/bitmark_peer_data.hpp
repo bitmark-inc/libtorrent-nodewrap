@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <map>
+#include <set>
 
 namespace bitmark {
 
@@ -16,49 +17,99 @@ namespace bitmark {
 		//==============constructor=========================
 
 		//==============set=================================
-		void set_peer_data(std::string pd)
+		void set_peer_data(std::string sk, std::string pk, std::string s_url)
 		{
-			m_peer_data = pd;
+			secret_key = sk;
+			public_key = pk;
+			server_url = s_url;
 		}
 
-		void set_status_torrent(const char *info_hash, std::string status)
-		{
-			std::string temp(info_hash);
-			m_map_torrent[temp] = status;
+		void set_torrent_peer(std::string info_hash, std::string ip){
+
+			if (check_torrent_peer(info_hash, ip)) return;
+
+			std::set<std::string> peer_set;
+			std::map<std::string, std::set<std::string> >::iterator it;
+			it = m_map_torrent_peer.find(info_hash);
+  			if (it != m_map_torrent_peer.end()) {
+  				peer_set =  it->second;
+  			}
+  			peer_set.insert(ip);
+
+			m_map_torrent_peer[info_hash] = peer_set;
+		}
+
+		void set_allow_torrent_peer(std::string info_hash, std::string ip){
+
+			if (check_allow_torrent_peer(info_hash, ip)) return;
+
+			std::set<std::string> peer_set;
+			std::map<std::string, std::set<std::string> >::iterator it;
+			it = m_map_allow_torrent_peer.find(info_hash);
+  			if (it != m_map_allow_torrent_peer.end()) {
+  				peer_set =  it->second;
+  			}
+  			peer_set.insert(ip);
+
+			m_map_allow_torrent_peer[info_hash] = peer_set;
 		}
 
 		//==============get=================================
-		std::string get_peer_data()
-		{
-			return m_peer_data;
-		}
 
-		std::string get_status_torrent(std::string info_hash)
-		{
-			std::map<std::string, std::string>::iterator it;
-			it = m_map_torrent.find(info_hash);
-  			if (it != m_map_torrent.end()) {
-  				return it->second;
+		bool check_torrent_peer(std::string info_hash, std::string ip){
+
+			std::set<std::string> peer_set;
+			std::map<std::string, std::set<std::string> >::iterator it;
+			it = m_map_torrent_peer.find(info_hash);
+  			if (it != m_map_torrent_peer.end()) {
+  				peer_set =  it->second;
   			}
-  			return std::string("");
+  			if (peer_set.empty()) {
+  				return false;
+  			}
+
+  			std::set<std::string>::iterator it_peer;
+  			it_peer = peer_set.find(ip);
+  			if (it_peer == peer_set.end()) {
+  				 return false;
+  			}
+  			return true;
 		}
 
-		std::string get_server_url() {
-			return server_url;
+		bool check_allow_torrent_peer(std::string info_hash, std::string ip){
+
+			std::set<std::string> peer_set;
+			std::map<std::string, std::set<std::string> >::iterator it;
+			it = m_map_allow_torrent_peer.find(info_hash);
+  			if (it != m_map_allow_torrent_peer.end()) {
+  				peer_set =  it->second;
+  			}
+  			if (peer_set.empty()) {
+  				return false;
+  			}
+
+  			std::set<std::string>::iterator it_peer;
+  			it_peer = peer_set.find(ip);
+  			if (it_peer == peer_set.end()) {
+  				 return false;
+  			}
+  			return true;
 		}
+
+
+
 
 		//==============virtual=================================
-		virtual void parse_peer_data();
 		virtual std::string create_plugin_message();
 		virtual bool check_plugin_message(std::string, std::string);
 
 
 	private:
-		std::string m_peer_data;
 		std::string secret_key;
 		std::string public_key;
 		std::string server_url;
-		std::map<std::string, std::string> m_map_torrent;
+		std::map<std::string, std::set<std::string> > m_map_torrent_peer;
+		std::map<std::string, std::set<std::string> > m_map_allow_torrent_peer;
 	};
 
 	unsigned char* convert2ByteArray(std::string hexStr, int * resultLenght);
