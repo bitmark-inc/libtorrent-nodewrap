@@ -15,6 +15,8 @@ if [[ $OSTYPE == darwin* ]]; then
   install_name_tool -change libboost_system.dylib @loader_path/libboost_system.dylib session.dylib
   install_name_tool -change libboost_thread.dylib @loader_path/libboost_thread.dylib session.dylib
   install_name_tool -change /usr/local/lib/libtorrent-rasterbar.8.dylib @loader_path/libtorrent-rasterbar.8.dylib session.dylib
+  install_name_tool -change /usr/local/lib/libGeoIP.1.dylib @loader_path/libGeoIP.1.dylib session.dylib
+  install_name_tool -change /usr/local/lib/libjson.0.dylib @loader_path/libjson.0.dylib session.dylib
 
   echo "add_torrent_params ..."
   install_name_tool -change libboost_system.dylib @loader_path/libboost_system.dylib add_torrent_params.dylib
@@ -55,5 +57,13 @@ if [[ $OSTYPE == darwin* ]]; then
   install_name_tool -change libboost_system.dylib @loader_path/libboost_system.dylib utp_status.dylib
   install_name_tool -change libboost_thread.dylib @loader_path/libboost_thread.dylib utp_status.dylib
   install_name_tool -change /usr/local/lib/libtorrent-rasterbar.8.dylib @loader_path/libtorrent-rasterbar.8.dylib utp_status.dylib
+
+
+  echo "peer_data ..."
+  install_name_tool -change libboost_system.dylib @loader_path/libboost_system.dylib peer_data.dylib
+  install_name_tool -change libboost_thread.dylib @loader_path/libboost_thread.dylib peer_data.dylib
+  install_name_tool -change /usr/local/lib/libtorrent-rasterbar.8.dylib @loader_path/libtorrent-rasterbar.8.dylib peer_data.dylib
+  install_name_tool -change /usr/local/lib/libGeoIP.1.dylib @loader_path/libGeoIP.1.dylib peer_data.dylib
+  install_name_tool -change /usr/local/lib/libjson.0.dylib @loader_path/libjson.0.dylib peer_data.dylib
   cd ../../
 fi

@@ -25,6 +25,7 @@ console.log('Create create_torrent');
 var create_torrent = new libtorrent.create_torrent(file_storage);
 create_torrent.set_comment('Comment');
 create_torrent.set_creator('Creator');
+create_torrent.set_piece_hashes(pieceHashPath);
 
 // Generate Torrent file
 console.log('Create torrent_file');
@@ -46,11 +47,11 @@ console.log('--------------Add Torrent Param------------------------');
 // params.save_path = pieceHashPath;
 // params.seed_mode = true;
 
+console.log('--------------Add Torrent Into the session and Seed------------------------');
+session.start_dht();
+
 console.log('--------------Add Torrent Torrent extension into the session------------------------');
 var peer_data = new libtorrent.peer_data();
-
-// var plugin = new libtorrent.plugin();
-// plugin.set_bitmark_peer_data(peer_data);
 session.add_extension(peer_data);
 
 console.log('--------------Add Torrent Into the session and Seed------------------------');
@@ -66,7 +67,15 @@ console.log('info_hash::::::', info_hash);
 
 console.log('Seeding ..... ');
 
-setTimeout(function() {
-  session.stop_session();
-  console.log('Done!');
-}, 10000);
+var time = setInterval(function() {
+  var progress = torrent_handle.status().progress;
+  var state = torrent_handle.status().state;
+  console.log((Number(progress * 100)).toFixed(2) + '% ---- ' + state);
+  if (progress == 1 && state ==5) {
+    clearInterval(time);
+  	setTimeout(function() {
+  	  session.stop_session();
+  	  console.log('Done!');
+  	}, 30000);
+  }
+},1);

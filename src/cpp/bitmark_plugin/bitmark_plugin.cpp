@@ -77,17 +77,15 @@ namespace libtorrent
 
 			virtual void add_handshake(entry& h)
 			{
-				std::cout << "Begin handshake" << std::endl;
 				entry& messages = h["m"];
 				//add extension message
 				std::string messageString = m_bpd->create_plugin_message();
 				messages[extension_name] = messageString;
-
-				std::cout << messageString << std::endl;
 			}
 
 			virtual bool on_extension_handshake(lazy_entry const& h)
 			{
+				std::cout << "Start on_extension_handshake" << std::endl;
 				if (h.type() != lazy_entry::dict_t) return false;
 				lazy_entry const* messages = h.dict_find("m");
 				if (!messages || messages->type() != lazy_entry::dict_t) return false;
@@ -105,32 +103,27 @@ namespace libtorrent
 				str_tmp << m_pc.remote().port();
 				std::string peer_ip = str_tmp.str();
 
-				bool peer_is_seed = m_bpd->check_torrent_peer(info_hash, peer_ip);
-
-				if (!peer_is_seed) {
-					//peer is a downloader
-					if (signedMessageString.empty()) {
-						resultCheck = false;
-					} else {
-						if (!m_bpd->check_plugin_message(signedMessageString, info_hash)) {
-							resultCheck = false;
-						}
-					}
+				if (m_bpd->check_allow_torrent_peer(info_hash, peer_ip)) {
+					// peer contain in list peers allow to download
+					return true;
 				}
 
-				std::cout << "result check: " << resultCheck << std::endl;
+				if (signedMessageString.empty()) {
+					resultCheck = false;
+				} else {
+					resultCheck = m_bpd->check_plugin_message(signedMessageString, info_hash);
+				}
 
-				if (resultCheck && !peer_is_seed) {
-					// peer is a downloader and allow for it download
+				if (resultCheck) {
 					m_bpd->set_allow_torrent_peer(info_hash, peer_ip);
 				}
 
-				return resultCheck;
+				return true;
 			}
 
 			virtual bool on_request (peer_request const& pr)
 			{
-				std::cout << "Begin on_request function" << std::endl;
+				std::cout << "Start on_request" << std::endl;
 				std::string info_hash = m_torrent.torrent_file().info_hash().to_string();
 				info_hash = bitmark::convert2HexString((unsigned char*)info_hash.c_str(), strlen(info_hash.c_str()));
 
@@ -141,13 +134,10 @@ namespace libtorrent
 				std::string peer_ip = str_tmp.str();
 
 				if (m_bpd->check_allow_torrent_peer(info_hash, peer_ip)) {
-
-					std::cout << "Allow download" << std::endl;
 					// peer contain in list peers allow to download
 					return false;
 				}
 				// don't allow to peer download
-				std::cout << "Reject download" << std::endl;
 				return true;
 
 			}
