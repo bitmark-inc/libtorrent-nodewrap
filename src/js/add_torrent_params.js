@@ -117,17 +117,17 @@ module.exports = function() {
     var _p = add_torrent_params.new_add_torrent_params();
 
     // Initial data when user passing an JSON object
-    if (arguments.length == 1){
+    if (arguments.length === 1){
       var jsonObj = arguments[0];
 
       // fetch all of properties of input param and set for add_torrent_params object
       for(var key in jsonObj) {
         if (key in _self) {
           _self[key] = jsonObj[key];
-        };
-      };
-    };
+        }
+      }
+    }
   };
 
   return AddTorrentParams;
-}();
+};

@@ -37,17 +37,17 @@ module.exports = function() {
 
     this.set_comment = function(comment) {
       ct.set_comment(_ct, comment);
-    }
+    };
     this.set_creator = function(creator) {
       ct.set_creator(_ct, creator);
-    }
+    };
     this.add_url_seed = function(url) {
       ct.add_url_seed(_ct, url);
-    }
+    };
     this.add_http_seed = function(http_url) {
       ct.add_http_seed(_ct, http_url);
-    }
-  }
+    };
+  };
 
   return CreateTorrent;
-}();
+};

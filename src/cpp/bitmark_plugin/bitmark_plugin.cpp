@@ -85,7 +85,6 @@ namespace libtorrent
 
 			virtual bool on_extension_handshake(lazy_entry const& h)
 			{
-				std::cout << "Start on_extension_handshake" << std::endl;
 				if (h.type() != lazy_entry::dict_t) return false;
 				lazy_entry const* messages = h.dict_find("m");
 				if (!messages || messages->type() != lazy_entry::dict_t) return false;
@@ -123,7 +122,6 @@ namespace libtorrent
 
 			virtual bool on_request (peer_request const& pr)
 			{
-				std::cout << "Start on_request" << std::endl;
 				std::string info_hash = m_torrent.torrent_file().info_hash().to_string();
 				info_hash = bitmark::convert2HexString((unsigned char*)info_hash.c_str(), strlen(info_hash.c_str()));
 

@@ -20,15 +20,15 @@ module.exports = function() {
     var _ti;
 
     // Check condition to mapping constructor function
-    if (arguments.length == 1) {
+    if (arguments.length === 1) {
       _ti = ti.new_torrent_info_entry(arguments[0]);
-    } else if (arguments.length == 2){
+    } else if (arguments.length === 2){
       if (typeof arguments[0] === "string") {
         _ti = ti.new_torrent_info_filename(arguments[0], parseInt(arguments[1]));
       } else if (arguments[0] instanceof Buffer) {
         _ti = ti.new_torrent_info_hash(arguments[0], parseInt(arguments[1]));
       }
-    } else if (arguments.length == 3) {
+    } else if (arguments.length === 3) {
       _ti = ti.new_torrent_info_torrent_buffer(arguments[0], parseInt(arguments[1]), parseInt(arguments[2]));
     }
 
@@ -38,8 +38,8 @@ module.exports = function() {
 
     this._get_entry = function() {
       return _ti;
-    }
-  }
+    };
+  };
 
   return TorrentInfo;
-}();
+};

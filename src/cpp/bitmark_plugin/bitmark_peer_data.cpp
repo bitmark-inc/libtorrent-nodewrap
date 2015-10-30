@@ -129,9 +129,9 @@ namespace bitmark
 		strstream << (long)now;
 		strstream >> timestamp;
 
-		std::string token_timestamp =
-			convert2HexString((unsigned char *)timestamp.c_str(), strlen((char*)timestamp.c_str()));
-		std::string signedMessage = sign(token_timestamp, secret_key);
+		// std::string token_timestamp =
+		// 	convert2HexString((unsigned char *)timestamp.c_str(), strlen((char*)timestamp.c_str()));
+		std::string signedMessage = sign(timestamp, secret_key);
 
 		// unsigned char * timestamp = (unsigned char *)"BachlX-Bitmark";
 		// std::string token_timestamp = convert2HexString(timestamp, strlen((char*)timestamp));
@@ -147,9 +147,8 @@ namespace bitmark
 		return extensionData;
 	}
 
-
-	std::string create_confirm_message(std::string signData, std::string info_hash)
-	{
+	bool bitmark_peer_data::check_plugin_message(std::string signData, std::string info_hash) {
+		// return true;
 		json_object * joExtMsg = json_tokener_parse(signData.c_str());
 		json_object * joExtMsgSM = json_object_object_get(joExtMsg, "signature");
 		json_object * joExtMsgDP = json_object_object_get(joExtMsg, "publicKey");
@@ -157,33 +156,16 @@ namespace bitmark
 		std::string signedMessage(json_object_get_string(joExtMsgSM));
 		std::string downPubkey(json_object_get_string(joExtMsgDP));
 
-		std::string token_timestamp = sign_open(signedMessage, downPubkey);
+		std::string timestamp = sign_open(signedMessage, downPubkey);
 
-		if (token_timestamp.empty()) {
-	  		return std::string("");
+		if (timestamp.empty()) {
+	  		return false;
 		}
 
-		json_object * joCfrMsg = json_object_new_object();
-		json_object * joCfrMsgTM = json_object_new_string(token_timestamp.c_str());
-		json_object * joCfrMsgPK = json_object_new_string(downPubkey.c_str());
-		json_object * joCfrMsgIH = json_object_new_string(info_hash.c_str());
-		json_object_object_add(joCfrMsg, "timestamp", joCfrMsgTM);
-		json_object_object_add(joCfrMsg, "publicKey", joCfrMsgPK);
-		json_object_object_add(joCfrMsg, "infoHash", joCfrMsgIH);
-
-		std::string dataConfirm(json_object_to_json_string(joCfrMsg));
-		return dataConfirm;
-	}
-
-	bool bitmark_peer_data::check_plugin_message(std::string signData, std::string info_hash) {
-		// return true;
-		std::string dataConfirm = create_confirm_message(signData, info_hash);
-		if (dataConfirm.empty()) {
-			return false;
-		}
-
-		std::string postData("dataExtension=");
-		postData = postData + dataConfirm;
+		std::string postData("timestamp=");
+		postData = postData + timestamp.c_str();
+		postData = postData + "&publicKey=" + downPubkey.c_str();
+		postData = postData + "&infoHash=" + info_hash.c_str();
 
 		std::string resultCheck = callServerAPI(server_url, postData);
 		if (resultCheck.empty()) {

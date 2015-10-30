@@ -46,7 +46,7 @@ module.exports = function() {
     this.at = function(index) {
       return fs.at(_fs, index);
     };
-  }
+  };
 
   return FileStorage;
-}();
+};

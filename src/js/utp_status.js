@@ -53,7 +53,7 @@ module.exports = function() {
     this.payload_pkts_out = utp_status.get_payload_pkts_out(_utp_status);
     this.invalid_pkts_in = utp_status.get_invalid_pkts_in(_utp_status);
     this.redundant_pkts_in = utp_status.get_redundant_pkts_in(_utp_status);
-  }
+  };
 
   return UtpStatus;
-}();
+};

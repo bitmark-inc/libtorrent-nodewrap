@@ -33,7 +33,7 @@ module.exports = function() {
 
     this.status = function() {
       var ts = th.status(_th);
-      return new TorrentStatus(ts)
+      return new TorrentStatus(ts);
     };
 
     this.add_url_seed = function(url) {
@@ -46,4 +46,4 @@ module.exports = function() {
   };
 
   return TorrentHandle;
-}();
+};
