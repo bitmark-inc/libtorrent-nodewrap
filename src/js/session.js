@@ -1,7 +1,7 @@
 var ffi = require('ffi');
 var path = require('path');
-var TorrentHandle = require('./torrent_handle');
-var AddTorrentParam = require('./add_torrent_params');
+var TorrentHandle = require('./torrent_handle')();
+var AddTorrentParam = require('./add_torrent_params')();
 
 // get root dir
 var root_dir = __dirname.replace('/src/js', '/');
@@ -38,6 +38,8 @@ module.exports = function() {
       } else {
         add_torrent_params = (new AddTorrentParam(params));
       }
+
+      console.log(add_torrent_params);
 
       var th = s.add_torrent(_s, add_torrent_params._get_entry());
       return new TorrentHandle(th);

@@ -8,6 +8,5 @@ module.exports = {
   torrent_handle: require('./torrent_handle')(),
   torrent_status: require('./torrent_status')(),
   create_torrent: require('./create_torrent')(),
-  peer_data: require('./peer_data')(),
-  plugin: require('./plugin')(),
+  peer_data: require('./peer_data')()
 };

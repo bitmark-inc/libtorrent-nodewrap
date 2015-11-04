@@ -1,6 +1,6 @@
 var ffi = require('ffi');
 var path = require('path');
-var TorrentStatus = require('./torrent_status');
+var TorrentStatus = require('./torrent_status')();
 
 // get root dir
 var root_dir = __dirname.replace('/src/js', '/');

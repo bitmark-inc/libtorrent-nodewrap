@@ -1,6 +1,6 @@
 var ffi = require('ffi');
 var path = require('path');
-var UtpStatus = require('./utp_status');
+var UtpStatus = require('./utp_status')();
 
 // get root dir
 var root_dir = __dirname.replace('/src/js', '/');

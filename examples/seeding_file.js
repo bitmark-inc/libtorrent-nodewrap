@@ -33,7 +33,7 @@ var torrent_file = create_torrent.generate();
 var torrent_info = new libtorrent.torrent_info(torrent_file);
 
 console.log('Create magnet_link');
-var magnet_link = torrent_info.create_magnet_uri()
+var magnet_link = torrent_info.create_magnet_uri();
 console.log('magnet link = ', magnet_link);
 
 console.log('--------------Add Torrent Param------------------------');
@@ -71,7 +71,7 @@ var time = setInterval(function() {
   var progress = torrent_handle.status().progress;
   var state = torrent_handle.status().state;
   console.log((Number(progress * 100)).toFixed(2) + '% ---- ' + state);
-  if (progress == 1 && state ==5) {
+  if (progress === 1 && state === 5) {
     clearInterval(time);
   	setTimeout(function() {
   	  session.stop_session();
