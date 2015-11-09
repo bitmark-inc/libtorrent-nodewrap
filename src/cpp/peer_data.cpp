@@ -21,4 +21,14 @@ extern "C" {
     std::string str_s_url = s_url;
     pd->set_peer_data(str_sk, str_pk, str_s_url);
   }
+  void add_bitmark_id(bitmark_peer_data *pd, char *bitmark_id, char *info_hash) {
+  	std::string str_bitmark_id = bitmark_id;
+    std::string str_info_hash = info_hash;
+    pd->add_bitmark_id(str_bitmark_id, str_info_hash);
+  }
+  void add_peer_pubkey(bitmark_peer_data *pd, char *peer_ip, char *pk) {
+  	std::string str_pk = pk;
+    std::string str_peer_ip = peer_ip;
+    pd->add_peer_pubkey(str_peer_ip, pk);
+  }
 }

@@ -36,9 +36,9 @@ var time = setInterval(function() {
   var progress = torrent_handle.status().progress;
   var state = torrent_handle.status().state;
   console.log((Number(progress * 100)).toFixed(2) + '% ---- ' + state);
-  if (progress == 1 && state ==5)
+  if (progress === 1 && state === 5)
     clearInterval(time);
-  if (state == 4) {
+  if (state === 4) {
     console.log('Finished');
     clearInterval(time);
   }

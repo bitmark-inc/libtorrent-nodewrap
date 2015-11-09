@@ -11,18 +11,29 @@ namespace bitmark {
 	class bitmark_peer_data
 	{
 	public:
-		//==============constructor=========================
 		bitmark_peer_data(){}
-		~bitmark_peer_data(){};
-		//==============constructor=========================
+		~bitmark_peer_data(){}
 
-		//==============set=================================
+		// wrap to nodejs
 		void set_peer_data(std::string sk, std::string pk, std::string s_url)
 		{
 			secret_key = sk;
 			public_key = pk;
 			server_url = s_url;
 		}
+
+		// wrap to nodejs
+		void add_bitmark_id(std::string bitmark_id, std::string info_hash)
+		{
+			m_map_bitmark_torrent[info_hash] = bitmark_id;
+		}
+
+		// wrap to nodejs
+		void add_peer_pubkey(std::string peer_ip, std::string pubkey)
+		{
+			m_map_peer_pubkey[peer_ip] = pubkey;
+		}
+
 
 		void set_allow_torrent_peer(std::string info_hash, std::string ip){
 
@@ -39,7 +50,28 @@ namespace bitmark {
 			m_map_allow_torrent_peer[info_hash] = peer_set;
 		}
 
-		//==============get=================================
+		std::string get_bitmark_id(std::string info_hash)
+		{
+			std::string bitmark_id("");
+			std::map<std::string, std::string>::iterator it;
+			it = m_map_bitmark_torrent.find(info_hash);
+			if (it != m_map_bitmark_torrent.end()) {
+				bitmark_id =  it->second;
+			}
+			return bitmark_id;
+		}
+
+		std::string get_public_key(std::string peer_ip)
+		{
+			std::string pubkey("");
+			std::map<std::string, std::string>::iterator it;
+			it = m_map_peer_pubkey.find(peer_ip);
+			if (it != m_map_peer_pubkey.end()) {
+				pubkey =  it->second;
+			}
+			return pubkey;
+		}
+
 		bool check_allow_torrent_peer(std::string info_hash, std::string ip){
 
 			std::set<std::string> peer_set;
@@ -60,11 +92,8 @@ namespace bitmark {
 			return true;
 		}
 
-
-
-
 		//==============virtual=================================
-		virtual std::string create_plugin_message();
+		virtual std::string create_plugin_message(std::string info_hash, std::string peer_ip);
 		virtual bool check_plugin_message(std::string, std::string);
 
 
@@ -72,8 +101,9 @@ namespace bitmark {
 		std::string secret_key;
 		std::string public_key;
 		std::string server_url;
-		std::map<std::string, std::set<std::string> > m_map_torrent_peer;
 		std::map<std::string, std::set<std::string> > m_map_allow_torrent_peer;
+		std::map<std::string, std::string> m_map_bitmark_torrent;
+		std::map<std::string, std::string> m_map_peer_pubkey;
 	};
 
 	unsigned char* convert2ByteArray(std::string hexStr, int * resultLenght);

@@ -77,9 +77,18 @@ namespace libtorrent
 
 			virtual void add_handshake(entry& h)
 			{
+				std::string info_hash = m_torrent.torrent_file().info_hash().to_string();
+				info_hash = bitmark::convert2HexString((unsigned char*)info_hash.c_str(), strlen(info_hash.c_str()));
+
+				std::ostringstream str_tmp;
+				str_tmp << m_pc.remote().address().to_string();
+				str_tmp << ":";
+				str_tmp << m_pc.remote().port();
+				std::string peer_ip = str_tmp.str();
+
 				entry& messages = h["m"];
 				//add extension message
-				std::string messageString = m_bpd->create_plugin_message();
+				std::string messageString = m_bpd->create_plugin_message(info_hash, peer_ip);
 				messages[extension_name] = messageString;
 			}
 

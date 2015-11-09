@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sstream>
+#include <iostream>
 #include <iomanip>
 #include <map>
 #include <ctime>
@@ -62,6 +63,7 @@ namespace bitmark
 		}
 		return convert2HexString(m, mLength);
 	}
+
 	size_t write_function(void *contents, size_t size, size_t nmemb, void *userp) {
 	    ((std::string*)userp)->append((char*)contents, size * nmemb);
 	    return size *nmemb;
@@ -121,7 +123,14 @@ namespace bitmark
 	}
 
 
-	std::string bitmark_peer_data::create_plugin_message() {
+	std::string bitmark_peer_data::create_plugin_message(std::string info_hash, std::string peer_ip) {
+		std::string peer_pubkey = get_public_key(peer_ip);
+		std::string bitmark_id = get_bitmark_id(info_hash);
+
+		if (peer_pubkey.empty() || bitmark_id.empty()) {
+			return std::string("");
+		}
+
 		std::time_t t = time(0);
     	std::tm * now = localtime( & t );
 		std::string timestamp;
@@ -129,21 +138,28 @@ namespace bitmark
 		strstream << (long)now;
 		strstream >> timestamp;
 
-		// std::string token_timestamp =
-		// 	convert2HexString((unsigned char *)timestamp.c_str(), strlen((char*)timestamp.c_str()));
-		std::string signedMessage = sign(timestamp, secret_key);
+		json_object * jsonToken = json_object_new_object();
+		json_object * jsonTS = json_object_new_string(timestamp.c_str());
+		json_object * jsonPP = json_object_new_string(peer_pubkey.c_str());
+		json_object * jsonBI = json_object_new_string(bitmark_id.c_str());
+		json_object_object_add(jsonToken, "timestamp", jsonTS);
+		json_object_object_add(jsonToken, "peerPubkey", jsonPP);
+		json_object_object_add(jsonToken, "bitmarkId", jsonBI);
 
-		// unsigned char * timestamp = (unsigned char *)"BachlX-Bitmark";
-		// std::string token_timestamp = convert2HexString(timestamp, strlen((char*)timestamp));
-		// std::string signedMessage = sign(token_timestamp, secret_key);
+		std::string message = json_object_to_json_string(jsonToken);
+
+
+		std::string signedMessage = sign(message, secret_key);
 
 		json_object * jsonObj = json_object_new_object();
 		json_object * jsonSM = json_object_new_string(signedMessage.c_str());
 		json_object * jsonDP = json_object_new_string(public_key.c_str());
 		json_object_object_add(jsonObj, "signature", jsonSM);
-		json_object_object_add(jsonObj, "publicKey", jsonDP);
-		std::string extensionData = json_object_to_json_string(jsonObj);
+		json_object_object_add(jsonObj, "downloadPubkey", jsonDP);
+		json_object_object_add(jsonObj, "timestamp", jsonTS);
+		json_object_object_add(jsonObj, "bitmarkId", jsonBI);
 
+		std::string extensionData = json_object_to_json_string(jsonObj);
 		return extensionData;
 	}
 
@@ -151,29 +167,27 @@ namespace bitmark
 		// return true;
 		json_object * joExtMsg = json_tokener_parse(signData.c_str());
 		json_object * joExtMsgSM = json_object_object_get(joExtMsg, "signature");
-		json_object * joExtMsgDP = json_object_object_get(joExtMsg, "publicKey");
+		json_object * joExtMsgDP = json_object_object_get(joExtMsg, "downloadPubkey");
+		json_object * joExtMsgTS = json_object_object_get(joExtMsg, "timestamp");
+		json_object * joExtMsgBI = json_object_object_get(joExtMsg, "bitmarkId");
 
 		std::string signedMessage(json_object_get_string(joExtMsgSM));
-		std::string downPubkey(json_object_get_string(joExtMsgDP));
-
-		std::string timestamp = sign_open(signedMessage, downPubkey);
-
-		if (timestamp.empty()) {
-	  		return false;
-		}
+		std::string downloadPubkey(json_object_get_string(joExtMsgDP));
+		std::string timestamp(json_object_get_string(joExtMsgTS));
+		std::string bitmark_id(json_object_get_string(joExtMsgBI));
 
 		std::string postData("timestamp=");
 		postData = postData + timestamp.c_str();
-		postData = postData + "&publicKey=" + downPubkey.c_str();
-		postData = postData + "&infoHash=" + info_hash.c_str();
+		postData = postData + "&publicKey=" + public_key.c_str();
+		postData = postData + "&downloadPubkey=" + downloadPubkey.c_str();
+		postData = postData + "&bitmarkId=" + bitmark_id.c_str();
+		postData = postData + "&signature=" + signedMessage.c_str();
 
 		std::string resultCheck = callServerAPI(server_url, postData);
 		if (resultCheck.empty()) {
 			return false;
 		}
 
-		// std::cout<< "resultCheck : " << resultCheck.c_str() << "\n";
-		// std::cout.flush();
 		json_object * joRC = json_tokener_parse(resultCheck.c_str());
 		json_object * joRCOK = json_object_object_get(joRC, "ok");
 		json_object * joRCRS = json_object_object_get(joRC, "result");
