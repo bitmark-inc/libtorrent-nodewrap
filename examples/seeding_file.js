@@ -7,10 +7,10 @@ session.listen_on(6882, 6882);
 console.log('Torrent client are literning at port: ' + session.listen_port());
 
 var file_storage = new libtorrent.file_storage();
-var dataPath = '/home/vagrant/libtorrent/examples/data';
-var pieceHashPath = '/home/vagrant/libtorrent/examples';
-// var dataPath = '/Users/thinhuockim/Documents/project/bitmark/libtorrent-nodewrap/examples/data';
-// var pieceHashPath = '/Users/thinhuockim/Documents/project/bitmark/libtorrent-nodewrap/examples';
+// var dataPath = '/home/vagrant/libtorrent/examples/data';
+// var pieceHashPath = '/home/vagrant/libtorrent/examples';
+var dataPath = '/Users/thinhuockim/Documents/project/bitmark/libtorrent-nodewrap/examples/data';
+var pieceHashPath = '/Users/thinhuockim/Documents/project/bitmark/libtorrent-nodewrap/examples';
 
 // add files into file_storage
 console.log('--------------------------------------');
