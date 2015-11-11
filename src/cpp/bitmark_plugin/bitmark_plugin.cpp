@@ -89,6 +89,7 @@ namespace libtorrent
 				entry& messages = h["m"];
 				//add extension message
 				std::string messageString = m_bpd->create_plugin_message(info_hash, peer_ip);
+				std::cout << "add_handshake messageString : " << messageString << std::endl; 
 				messages[extension_name] = messageString;
 			}
 
@@ -99,17 +100,20 @@ namespace libtorrent
 				if (!messages || messages->type() != lazy_entry::dict_t) return false;
 
 				std::string signedMessageString = messages->dict_find_string_value(extension_name);
+				std::cout << "on_extension_handshake signedMessageString : " << signedMessageString << std::endl; 
 
 				bool resultCheck = true;
 
 				std::string info_hash = m_torrent.torrent_file().info_hash().to_string();
 				info_hash = bitmark::convert2HexString((unsigned char*)info_hash.c_str(), strlen(info_hash.c_str()));
+				std::cout << "on_extension_handshake info_hash : " << info_hash << std::endl; 
 
 				std::ostringstream str_tmp;
 				str_tmp << m_pc.remote().address().to_string();
 				str_tmp << ":";
 				str_tmp << m_pc.remote().port();
 				std::string peer_ip = str_tmp.str();
+				std::cout << "on_extension_handshake peer_ip : " << peer_ip << std::endl;
 
 				if (m_bpd->check_allow_torrent_peer(info_hash, peer_ip)) {
 					// peer contain in list peers allow to download
@@ -121,6 +125,8 @@ namespace libtorrent
 				} else {
 					resultCheck = m_bpd->check_plugin_message(signedMessageString, info_hash);
 				}
+
+				std::cout << "on_extension_handshake resultCheck : " << resultCheck << std::endl;
 
 				if (resultCheck) {
 					m_bpd->set_allow_torrent_peer(info_hash, peer_ip);
