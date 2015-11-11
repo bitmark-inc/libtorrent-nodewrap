@@ -3,7 +3,8 @@ var path = require('path');
 
 var session = new libtorrent.session();
 
-var pieceHashPath = '/home/vagrant/libtorrent/';
+// var pieceHashPath = '/home/vagrant/libtorrent/';
+var pieceHashPath = '/Users/thinhuockim/Documents/project/bitmark/libtorrent-nodewrap/examples';
 // var magnet_uri = 'magnet:?xt=urn:btih:61e7f76315bb2fbd93962a830b7725ea639763ea&dn=precise64.box';
 // var magnet_uri = 'magnet:?xt=urn:btih:82d05efa9a34bcb143215c307a6f066179551000&dn=test_data.txt';
 var magnet_uri = 'magnet:?xt=urn:btih:12f1d333efa7c8c5df465852aa40787b2d16d5ba'; // download 2 file
