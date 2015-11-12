@@ -103,11 +103,19 @@ extern "C" {
     return 0;
   }
 
-  int add_port_forwarding(session *ses, int _min, int _max)
+  int add_port_mapping(session *ses, int _min, int _max)
   {
-    ses->start_upnp();
-    ses->start_natpmp();
     ses->add_port_mapping(session::udp, _min, _max);
+    return 0;
+  }
+
+  int start_upnp(session *ses) {
+    ses->start_upnp();
+    return 0;
+  }
+
+  int start_natpmp(session *ses) {
+    ses->start_natpmp();
     return 0;
   }
 

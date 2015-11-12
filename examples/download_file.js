@@ -7,7 +7,10 @@ var session = new libtorrent.session();
 var pieceHashPath = '/Users/thinhuockim/Documents/project/bitmark/libtorrent-nodewrap/examples';
 // var magnet_uri = 'magnet:?xt=urn:btih:61e7f76315bb2fbd93962a830b7725ea639763ea&dn=precise64.box';
 // var magnet_uri = 'magnet:?xt=urn:btih:82d05efa9a34bcb143215c307a6f066179551000&dn=test_data.txt';
-var magnet_uri = 'magnet:?xt=urn:btih:12f1d333efa7c8c5df465852aa40787b2d16d5ba'; // download 2 file
+// var magnet_uri = 'magnet:?xt=urn:btih:12f1d333efa7c8c5df465852aa40787b2d16d5ba'; // download 2 file
+
+// bach
+var magnet_uri = 'magnet:?xt=urn:btih:859df41355fc38f0c56fdf36f40ba87642c28b76'; // download 2 file
 
 
 console.log('--------------Add Torrent Param------------------------');
@@ -21,9 +24,9 @@ var peer_data = new libtorrent.peer_data();
 var pk = (new Buffer('uMsWo4OPlmxzhYSx1IaUbqMgmeixRY4X7xEC4otgrTE=', 'base64')).toString('hex');
 var sk = (new Buffer('oULYG9H3It3q4g5qmB/1na5ylxkysqzqHVlixl5RDGg=')).toString('hex');
 var s_url = '127.0.0.1:3000/api/checkExtension';
-var seed_url = '10.0.2.2:6882';
-peer_data.set_peer_data(pk, sk, s_url);
-session.add_extension(peer_data);
+var seed_url = '42.119.209.73:11021';
+// peer_data.set_peer_data(pk, sk, s_url);
+// session.add_extension(peer_data);
 
 console.log('--------------Add Torrent Into the session and Seed------------------------');
 var torrent_handle = session.add_torrent(params);
