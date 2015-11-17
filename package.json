@@ -45,7 +45,6 @@
     "crypto": false
   },
   "scripts": {
-    "test": ". ./config_lib.sh && node test/test_seeding_file.js",
     "install": "./link_library_for_MAC.sh"
   }
 }
