@@ -7,10 +7,10 @@ session.listen_on(6882, 6882);
 console.log('Torrent client are literning at port: ' + session.listen_port());
 
 var file_storage = new libtorrent.file_storage();
-// var dataPath = '/home/vagrant/libtorrent/examples/data';
-// var pieceHashPath = '/home/vagrant/libtorrent/examples';
-var dataPath = '/Users/thinhuockim/Documents/project/bitmark/libtorrent-nodewrap/examples/data';
-var pieceHashPath = '/Users/thinhuockim/Documents/project/bitmark/libtorrent-nodewrap/examples';
+var dataPath = '/home/vagrant/libtorrent/examples/data';
+var pieceHashPath = '/home/vagrant/libtorrent/examples';
+// var dataPath = '/Users/thinhuockim/Documents/project/bitmark/libtorrent-nodewrap/examples/data';
+// var pieceHashPath = '/Users/thinhuockim/Documents/project/bitmark/libtorrent-nodewrap/examples';
 
 // add files into file_storage
 console.log('--------------------------------------');
@@ -52,7 +52,7 @@ session.start_dht();
 
 console.log('--------------Add Torrent Torrent extension into the session------------------------');
 var peer_data = new libtorrent.peer_data();
-session.add_extension(peer_data);
+// session.add_extension(peer_data);
 
 console.log('--------------Add Torrent Into the session and Seed------------------------');
 // var torrent_handle = session.add_torrent(params);
@@ -76,6 +76,6 @@ var time = setInterval(function() {
   	setTimeout(function() {
   	  session.stop_session();
   	  console.log('Done!');
-  	}, 30000);
+  	}, 300000);
   }
 },1);

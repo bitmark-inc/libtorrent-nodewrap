@@ -18,7 +18,8 @@ module.exports = function() {
     'start_upnp': [ 'int', ['pointer'] ],
     'start_natpmp': [ 'int', ['pointer'] ],
     'listen_port': [ 'short', ['pointer'] ],
-    'add_extension': [ 'void', ['pointer', 'pointer'] ]
+    'add_extension': [ 'void', ['pointer', 'pointer'] ],
+    'add_dht_node': [ 'void', ['pointer', 'CString', 'int'] ]
   });
 
   var Session = function() {
@@ -69,6 +70,10 @@ module.exports = function() {
 
     this.add_extension = function(peer_data) {
       s.add_extension(_s, peer_data._get_entry());
+    };
+
+    this.add_dht_node = function(addr, port) {
+      s.add_dht_node(_s, addr, port);
     };
   };
 

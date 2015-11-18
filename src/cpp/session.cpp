@@ -140,4 +140,9 @@ extern "C" {
     bp.set_bitmark_peer_data(bpd);
     ses->add_extension(bp.get_create_bitmark_plugin_function());
   }
+
+  void add_dht_node(session *ses, char *addr, int port) {
+    std::string addr_str = addr;
+    ses->add_dht_node(std::make_pair(addr_str, port));
+  }
 }

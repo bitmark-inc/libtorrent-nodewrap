@@ -13,6 +13,7 @@ module.exports = function() {
     'info_hash': [ 'CString', ['pointer'] ],
     'status': [ 'pointer', ['pointer'] ],
     'name': [ 'pointer', ['CString'] ],
+    'connect_peer': [ 'void', ['pointer', 'CString', 'int', 'int'] ]
   });
 
 
@@ -42,6 +43,10 @@ module.exports = function() {
 
     this.name = function() {
       th.name(_th);
+    };
+
+    this.connect_peer = function(addr, port, source) {
+      th.connect_peer(_th, addr, port, source);
     };
   };
 

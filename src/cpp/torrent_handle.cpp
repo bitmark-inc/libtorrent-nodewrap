@@ -34,4 +34,8 @@ extern "C" {
   char* name(torrent_handle* handle) {
     return (char*)handle->name().c_str();
   }
+  void connect_peer(torrent_handle* handle, char *addr, int port, int source = 0) {
+    tcp::endpoint ep(boost::asio::ip::address::from_string(addr), port);
+    handle->connect_peer(ep, source);
+  }
 }
