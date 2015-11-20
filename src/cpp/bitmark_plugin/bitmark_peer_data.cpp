@@ -178,9 +178,9 @@ namespace bitmark
 
 		std::string postData("timestamp=");
 		postData = postData + timestamp.c_str();
-		postData = postData + "&publicKey=" + public_key.c_str();
-		postData = postData + "&downloadPubkey=" + downloadPubkey.c_str();
-		postData = postData + "&bitmarkId=" + bitmark_id.c_str();
+		postData = postData + "&my_pubkey=" + public_key.c_str();
+		postData = postData + "&pubkey=" + downloadPubkey.c_str();
+		postData = postData + "&bitmark=" + bitmark_id.c_str();
 		postData = postData + "&signature=" + signedMessage.c_str();
 
 		std::string resultCheck = callServerAPI(server_url, postData);
