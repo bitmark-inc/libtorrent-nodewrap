@@ -49,6 +49,8 @@ console.log('--------------Add Torrent Param------------------------');
 
 console.log('--------------Add Torrent Into the session and Seed------------------------');
 session.start_dht();
+session.add_port_mapping(6882, 6882);
+session.start_upnp();
 
 console.log('--------------Add Torrent Torrent extension into the session------------------------');
 var peer_data = new libtorrent.peer_data();
