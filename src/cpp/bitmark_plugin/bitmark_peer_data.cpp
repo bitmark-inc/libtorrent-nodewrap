@@ -44,7 +44,7 @@ namespace bitmark
 		}
 		return convert2HexString(sm, smLength);
 	}
-
+	
 	std::string sign_open(std::string signedMessage, std::string pubKey) {
 
 		int length;
@@ -64,6 +64,25 @@ namespace bitmark
 		return convert2HexString(m, mLength);
 	}
 
+	std::string sign_detach(std::string message, std::string scrKey) {
+
+		int length;
+		//using mLength as temp
+		u8* sk = convert2ByteArray(scrKey, &length);
+		u8* m = convert2ByteArray(message, &length);
+		u64 mLength = (u64)length;
+
+		u64 smLength = (u64)(crypto_sign_length + length);
+		u8* sm = (u8*)malloc (sizeof (u8) * smLength);
+
+		if (crypto_sign(sm, &smLength, m, mLength, sk) != 0) {
+			std::string temp("");
+			return temp;
+		}
+		int length_sign_detach = 64;
+		return convert2HexString(sm, length_sign_detach);
+	}
+
 	size_t write_function(void *contents, size_t size, size_t nmemb, void *userp) {
 	    ((std::string*)userp)->append((char*)contents, size * nmemb);
 	    return size *nmemb;
@@ -72,7 +91,7 @@ namespace bitmark
 	std::string callServerAPI(std::string serverUrlAPI, std::string dataString) {
 		CURL *curl;
 		CURLcode res;
-		std::string result;
+		std::string result("");
 		curl_global_init(CURL_GLOBAL_ALL);
 		curl = curl_easy_init();
 		if(curl) {
@@ -82,8 +101,7 @@ namespace bitmark
 			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_function);
 			res = curl_easy_perform(curl);
 			if(res != CURLE_OK) {
-		  		std::string temp("");
-		  		return temp;
+		  		result = std::string("");
 			}
 			curl_easy_cleanup(curl);
 		}
@@ -138,22 +156,16 @@ namespace bitmark
 		strstream << (long)now;
 		strstream >> timestamp;
 
-		json_object * jsonToken = json_object_new_object();
-		json_object * jsonTS = json_object_new_string(timestamp.c_str());
-		json_object * jsonPP = json_object_new_string(peer_pubkey.c_str());
-		json_object * jsonBI = json_object_new_string(bitmark_id.c_str());
-		json_object_object_add(jsonToken, "timestamp", jsonTS);
-		json_object_object_add(jsonToken, "peerPubkey", jsonPP);
-		json_object_object_add(jsonToken, "bitmarkId", jsonBI);
+		std::string message = timestamp + bitmark_id + peer_pubkey;
 
-		std::string message = json_object_to_json_string(jsonToken);
-
-
-		std::string signedMessage = sign(message, secret_key);
+		message = convert2HexString((unsigned char *)message.c_str(), strlen(message.c_str()));
+		std::string signedMessage = sign_detach(message, secret_key);
 
 		json_object * jsonObj = json_object_new_object();
+		json_object * jsonTS = json_object_new_string(timestamp.c_str());
 		json_object * jsonSM = json_object_new_string(signedMessage.c_str());
 		json_object * jsonDP = json_object_new_string(public_key.c_str());
+		json_object * jsonBI = json_object_new_string(bitmark_id.c_str());
 		json_object_object_add(jsonObj, "signature", jsonSM);
 		json_object_object_add(jsonObj, "downloadPubkey", jsonDP);
 		json_object_object_add(jsonObj, "timestamp", jsonTS);
@@ -184,23 +196,30 @@ namespace bitmark
 		postData = postData + "&signature=" + signedMessage.c_str();
 
 		std::string resultCheck = callServerAPI(server_url, postData);
-		if (resultCheck.empty()) {
+		if (resultCheck.empty() || resultCheck == "Not Found") {
 			return false;
 		}
 
 		json_object * joRC = json_tokener_parse(resultCheck.c_str());
-		json_object * joRCOK = json_object_object_get(joRC, "ok");
-		json_object * joRCRS = json_object_object_get(joRC, "result");
 
+		json_object * joRCOK = json_object_object_get(joRC, "ok");
 		json_type typeOK = json_object_get_type(joRCOK);
-		json_type typeRS = json_object_get_type(joRCRS);
-		if ((typeOK == json_type_boolean) && (typeRS == json_type_boolean)) {
+		if (typeOK == json_type_boolean) {
 			bool ok = json_object_get_boolean(joRCOK);
-			bool result = json_object_get_boolean(joRCRS);
-			if (ok && result) {
-				return true;
+			if (ok) {
+				json_object * joRCRS = json_object_object_get(joRC, "result");
+				json_object * joRAL = json_object_object_get(joRCRS, "allow");
+				json_type typeAL = json_object_get_type(joRAL);
+				if (typeAL == json_type_boolean) {
+					bool allow = json_object_get_boolean(joRAL);
+					if (allow) {
+						return true;
+					} else {
+						json_object * joRRA = json_object_object_get(joRCRS, "reason");
+						std::cout << "check download failed because " << json_object_get_string(joRRA) << std::endl;
+					}
+				}
 			}
-			return false;
 		}
 		return false;
 	}
