@@ -2,6 +2,7 @@ var ffi = require('ffi');
 var path = require('path');
 var TorrentHandle = require('./torrent_handle')();
 var AddTorrentParam = require('./add_torrent_params')();
+var Alert = require('./alert')();
 
 // get root dir
 var root_dir = __dirname.replace('/src/js', '/');
@@ -19,7 +20,8 @@ module.exports = function() {
     'start_natpmp': [ 'int', ['pointer'] ],
     'listen_port': [ 'short', ['pointer'] ],
     'add_extension': [ 'void', ['pointer', 'pointer'] ],
-    'add_dht_node': [ 'void', ['pointer', 'CString', 'int'] ]
+    'add_dht_node': [ 'void', ['pointer', 'CString', 'int'] ],
+    'pop_alert': ['pointer', ['pointer']]
   });
 
   var Session = function() {
@@ -74,6 +76,11 @@ module.exports = function() {
 
     this.add_dht_node = function(addr, port) {
       s.add_dht_node(_s, addr, port);
+    };
+
+    this.pop_alert = function() {
+      var alert = s.pop_alert(_s);
+      return new Alert(alert);
     };
   };
 

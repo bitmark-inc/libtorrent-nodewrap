@@ -5,3 +5,5 @@ bower_components/
 .vagrant/
 build/
 extention/
+bootstrap.sh
+Vagrantfile

@@ -145,4 +145,8 @@ extern "C" {
     std::string addr_str = addr;
     ses->add_dht_node(std::make_pair(addr_str, port));
   }
+
+  alert* pop_alert(session *ses) {
+    return ses->pop_alert().release();
+  }
 }

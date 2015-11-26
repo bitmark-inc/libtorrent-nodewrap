@@ -21,16 +21,16 @@ params.seed_mode = false;
 
 console.log('--------------Add Torrent Torrent extension into the session------------------------');
 var peer_data = new libtorrent.peer_data();
-var pk = (new Buffer('uMsWo4OPlmxzhYSx1IaUbqMgmeixRY4X7xEC4otgrTE=', 'base64')).toString('hex');
-var sk = (new Buffer('oULYG9H3It3q4g5qmB/1na5ylxkysqzqHVlixl5RDGg=')).toString('hex');
-var s_url = '127.0.0.1:3000/api/checkExtension';
-var seed_url = '127.0.0.1:6882';
-// peer_data.set_peer_data(pk, sk, s_url);
-// session.add_extension(peer_data);
+var pubkey = "d5182f5aeaba93a79793473cd2b15fffea37f0b3ec51c57984d7d86e4430a832";
+var prikey = "cd7ec400de891a22f29d79b46bdcc71ddb0f42f66db835538b4c592b9f6dfa6ad5182f5aeaba93a79793473cd2b15fffea37f0b3ec51c57984d7d86e4430a832";
+peer_data.set_peer_data(prikey, pubkey, 'http://192.168.1.5:8081/api/verify-download');
+peer_data.add_peer_pubkey('127.0.0.1:6882', "d5182f5aeaba93a79793473cd2b15fffea37f0b3ec51c57984d7d86e4430a832");
+peer_data.add_bitmark_id("demoSeeding", '12f1d333efa7c8c5df465852aa40787b2d16d5ba');
+session.add_extension(peer_data);
 
 console.log('--------------Add Torrent Into the session and Seed------------------------');
-session.add_dht_node('10.0.2.2', -8320);
 var torrent_handle = session.add_torrent(params);
+torrent_handle.connect_peer('127.0.0.1', 6882, 0);
 // torrent_handle.add_url_seed(seed_url);
 console.log(torrent_handle.is_valid());
 
