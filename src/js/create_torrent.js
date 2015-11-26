@@ -26,6 +26,14 @@ module.exports = function() {
       ct.set_piece_hashes(_ct, outpath);
     };
 
+    this.async_set_piece_hashes = function(outpath, callback) {
+      ct.set_piece_hashes.async(_ct, outpath, function(err, res){
+        if (callback) {
+          callback(res);
+        }
+      });
+    };
+
     this.bencode = function() {
       var bencode = ct.bencode(_ct);
       return bencode;
