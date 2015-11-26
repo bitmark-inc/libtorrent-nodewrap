@@ -7,10 +7,10 @@ session.listen_on(6882, 6882);
 console.log('Torrent client are literning at port: ' + session.listen_port());
 
 var file_storage = new libtorrent.file_storage();
-// var dataPath = '/home/vagrant/libtorrent/examples/data';
-// var pieceHashPath = '/home/vagrant/libtorrent/examples';
-var dataPath = '/Users/thinhuockim/Documents/project/bitmark/libtorrent-nodewrap/examples/data';
-var pieceHashPath = '/Users/thinhuockim/Documents/project/bitmark/libtorrent-nodewrap/examples';
+var dataPath = '/home/vagrant/libtorrent/examples/data';
+var pieceHashPath = '/home/vagrant/libtorrent/examples';
+// var dataPath = '/Users/thinhuockim/Documents/project/bitmark/libtorrent-nodewrap/examples/data';
+// var pieceHashPath = '/Users/thinhuockim/Documents/project/bitmark/libtorrent-nodewrap/examples';
 
 // add files into file_storage
 console.log('--------------------------------------');
@@ -22,20 +22,18 @@ console.log('Number of files:', file_storage.num_files());
 
 // create torrent
 console.log('Create create_torrent');
-console.log((new Date()).getTime());
 var create_torrent = new libtorrent.create_torrent(file_storage);
 create_torrent.set_comment('Comment');
 create_torrent.set_creator('Creator');
-console.log((new Date()).getTime());
 create_torrent.async_set_piece_hashes(pieceHashPath, function() {
   // Generate Torrent file
   console.log('Create torrent_file');
-  console.log((new Date()).getTime());
+
   var torrent_file = create_torrent.generate();
   var torrent_info = new libtorrent.torrent_info(torrent_file);
 
   console.log('Create magnet_link');
-  var magnet_link = torrent_info.create_magnet_uri();
+  var magnet_link = torrent_info.make_magnet_uri();
   console.log('magnet link = ', magnet_link);
 
   console.log('--------------Add Torrent Param------------------------');
@@ -63,13 +61,13 @@ create_torrent.async_set_piece_hashes(pieceHashPath, function() {
 
   console.log('--------------Add Torrent Into the session and Seed------------------------');
   // var torrent_handle = session.add_torrent(params);
-  console.log((new Date()).getTime());
+
   session.async_add_torrent({
     ti: torrent_info,
     save_path: pieceHashPath,
     seed_mode: true,
   }, function(torrent_handle) {
-    console.log((new Date()).getTime());
+  
     var alert = session.pop_alert();
     console.log(torrent_handle.is_valid());
     var info_hash = torrent_handle.info_hash();

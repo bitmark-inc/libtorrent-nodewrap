@@ -12,7 +12,7 @@ module.exports = function() {
     'new_torrent_info_filename': ['pointer', ['CString', 'int']],
     'new_torrent_info_hash': ['pointer', ['CString', 'int']],
     'new_torrent_info_torrent_buffer': ['pointer', ['pointer', 'int', 'int']],
-    'create_magnet_uri': ['CString', ['pointer']]
+    'make_magnet_uri': ['CString', ['pointer']]
   });
 
 
@@ -32,8 +32,8 @@ module.exports = function() {
       _ti = ti.new_torrent_info_torrent_buffer(arguments[0], parseInt(arguments[1]), parseInt(arguments[2]));
     }
 
-    this.create_magnet_uri = function() {
-      return ti.create_magnet_uri(_ti);
+    this.make_magnet_uri = function() {
+      return ti.make_magnet_uri(_ti);
     };
 
     this._get_entry = function() {

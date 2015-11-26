@@ -22,7 +22,7 @@ extern "C" {
     unsigned char* info_hash = (unsigned char*)handle->info_hash().to_string().c_str();
     int lng = strlen((char *)info_hash);
     std::string tmp = convert_2_hex_string(info_hash, lng);
-    return (char*)tmp.c_str();
+    return strdup(tmp.c_str());
   }
   torrent_status* status(torrent_handle* handle) {
     return new torrent_status(handle->status());

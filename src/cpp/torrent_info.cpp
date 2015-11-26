@@ -41,7 +41,7 @@ extern "C" {
     return (boost::intrusive_ptr<torrent_info>*)new torrent_info(ih, flags);
   }
 
-  char* create_magnet_uri(boost::intrusive_ptr<torrent_info>* ti) {
+  char* make_magnet_uri(boost::intrusive_ptr<torrent_info>* ti) {
     std::string magnetUrl = make_magnet_uri(*ti->get());
     return strdup(magnetUrl.c_str());
   }
