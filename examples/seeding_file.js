@@ -61,28 +61,30 @@ session.start_upnp();
 
 console.log('--------------Add Torrent Into the session and Seed------------------------');
 // var torrent_handle = session.add_torrent(params);
-var torrent_handle = session.add_torrent({
+session.async_add_torrent({
   ti: torrent_info,
   save_path: pieceHashPath,
   seed_mode: true,
+}, function(torrent_handle) {
+  var alert = session.pop_alert();
+  console.log(torrent_handle.is_valid());
+  var info_hash = torrent_handle.info_hash();
+  console.log('info_hash::::::', info_hash);
+
+  console.log('Seeding ..... ');
+
+  var time = setInterval(function() {
+    var progress = torrent_handle.status().progress;
+    var state = torrent_handle.status().state;
+    console.log('alert:::::::', alert.category());
+    console.log((Number(progress * 100)).toFixed(2) + '% ---- ' + state);
+    if (progress === 1 && state === 5) {
+      clearInterval(time);
+    }
+  },1);
 });
-var alert = session.pop_alert();
-console.log(torrent_handle.is_valid());
-var info_hash = torrent_handle.info_hash();
-console.log('info_hash::::::', info_hash);
 
-console.log('Seeding ..... ');
-
-var time = setInterval(function() {
-  var progress = torrent_handle.status().progress;
-  var state = torrent_handle.status().state;
-  console.log('alert:::::::', alert.category());
-  console.log((Number(progress * 100)).toFixed(2) + '% ---- ' + state);
-  if (progress === 1 && state === 5) {
-    clearInterval(time);
-  	setTimeout(function() {
-  	  session.stop_session();
-  	  console.log('Done!');
-  	}, 300000);
-  }
-},1);
+setTimeout(function() {
+  session.stop_session();
+  console.log('Done!');
+}, 300000);

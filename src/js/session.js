@@ -50,6 +50,21 @@ module.exports = function() {
       return new TorrentHandle(th);
     };
 
+    this.async_add_torrent = function(params, callback) {
+      var add_torrent_params;
+      if (params instanceof AddTorrentParam) {
+        add_torrent_params = params;
+      } else {
+        add_torrent_params = (new AddTorrentParam(params));
+      }
+
+      console.log(add_torrent_params);
+
+      var th = s.add_torrent.async(_s, add_torrent_params._get_entry(), function(err, res) {
+        callback(new TorrentHandle(res));
+      });
+    };
+
     this.start_dht = function() {
       return s.start_dht(_s);
     };
