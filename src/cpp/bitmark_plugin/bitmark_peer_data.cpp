@@ -162,7 +162,7 @@ namespace bitmark
 
 		std::string message = timestamp + bitmark_id + peer_pubkey;
 
-		message = convert2HexString((unsigned char *)message.c_str(), strlen(message.c_str()));
+		message = convert2HexString((unsigned char *)message.c_str(), message.size());
 		std::string signedMessage = sign_detach(message, secret_key);
 
 		json_object * jsonObj = json_object_new_object();

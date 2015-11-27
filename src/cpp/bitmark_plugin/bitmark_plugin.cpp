@@ -78,7 +78,7 @@ namespace libtorrent
 			virtual void add_handshake(entry& h)
 			{
 				std::string info_hash = m_torrent.torrent_file().info_hash().to_string();
-				info_hash = bitmark::convert2HexString((unsigned char*)info_hash.c_str(), strlen(info_hash.c_str()));
+				info_hash = bitmark::convert2HexString((unsigned char*)info_hash.c_str(), info_hash.size());
 
 				std::ostringstream str_tmp;
 				str_tmp << m_pc.remote().address().to_string();
@@ -104,7 +104,7 @@ namespace libtorrent
 				bool resultCheck = true;
 
 				std::string info_hash = m_torrent.torrent_file().info_hash().to_string();
-				info_hash = bitmark::convert2HexString((unsigned char*)info_hash.c_str(), strlen(info_hash.c_str()));
+				info_hash = bitmark::convert2HexString((unsigned char*)info_hash.c_str(), info_hash.size());
 
 				std::ostringstream str_tmp;
 				str_tmp << m_pc.remote().address().to_string();
@@ -136,7 +136,7 @@ namespace libtorrent
 			virtual bool on_request (peer_request const& pr)
 			{
 				std::string info_hash = m_torrent.torrent_file().info_hash().to_string();
-				info_hash = bitmark::convert2HexString((unsigned char*)info_hash.c_str(), strlen(info_hash.c_str()));
+				info_hash = bitmark::convert2HexString((unsigned char*)info_hash.c_str(), info_hash.size());
 
 				std::ostringstream str_tmp;
 				str_tmp << m_pc.remote().address().to_string();
