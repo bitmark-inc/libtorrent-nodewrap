@@ -142,8 +142,12 @@ namespace bitmark
 
 
 	std::string bitmark_peer_data::create_plugin_message(std::string info_hash, std::string peer_ip) {
+		std::cout << "create_plugin_message - info_hash" << info_hash << std::endl;
+		std::cout << "create_plugin_message - peer_ip" << peer_ip << std::endl;
 		std::string peer_pubkey = get_public_key(peer_ip);
 		std::string bitmark_id = get_bitmark_id(info_hash);
+		std::cout << "create_plugin_message - peer_pubkey" << peer_pubkey << std::endl;
+		std::cout << "create_plugin_message - bitmark_id" << bitmark_id << std::endl;
 
 		if (peer_pubkey.empty() || bitmark_id.empty()) {
 			return std::string("");
@@ -177,6 +181,7 @@ namespace bitmark
 
 	bool bitmark_peer_data::check_plugin_message(std::string signData, std::string info_hash) {
 		// return true;
+		std::cout << "check_plugin_message ===============" << std::endl;
 		json_object * joExtMsg = json_tokener_parse(signData.c_str());
 		json_object * joExtMsgSM = json_object_object_get(joExtMsg, "signature");
 		json_object * joExtMsgDP = json_object_object_get(joExtMsg, "downloadPubkey");
@@ -199,6 +204,8 @@ namespace bitmark
 		if (resultCheck.empty() || resultCheck == "Not Found") {
 			return false;
 		}
+
+		std::cout << "check_plugin_message -  resultCheck" << resultCheck << std::endl;
 
 		json_object * joRC = json_tokener_parse(resultCheck.c_str());
 

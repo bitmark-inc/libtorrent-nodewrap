@@ -89,6 +89,7 @@ namespace libtorrent
 				entry& messages = h["m"];
 				//add extension message
 				std::string messageString = m_bpd->create_plugin_message(info_hash, peer_ip);
+				std::cout << "add_handshake - messageString" << messageString << std::endl;
 				messages[extension_name] = messageString;
 			}
 
@@ -113,12 +114,15 @@ namespace libtorrent
 
 				if (m_bpd->check_allow_torrent_peer(info_hash, peer_ip)) {
 					// peer contain in list peers allow to download
+					std::cout << "on_extension_handshake - check_allow_torrent_peer " << std::endl;
 					return true;
 				}
 
 				if (signedMessageString.empty()) {
+					std::cout << "on_extension_handshake - signedMessageString empty" << std::endl;
 					resultCheck = false;
 				} else {
+					std::cout << "on_extension_handshake - check_plugin_message" << std::endl;
 					resultCheck = m_bpd->check_plugin_message(signedMessageString, info_hash);
 				}
 
