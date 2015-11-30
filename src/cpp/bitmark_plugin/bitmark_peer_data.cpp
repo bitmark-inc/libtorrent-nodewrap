@@ -5,7 +5,9 @@
 #include <iostream>
 #include <iomanip>
 #include <map>
-#include <ctime>
+#include <time.h> 
+#include <sys/timeb.h>
+#include <sys/time.h> 
 
 #include <curl/curl.h>
 #include <json/json.h>
@@ -153,11 +155,13 @@ namespace bitmark
 			return std::string("");
 		}
 
-		std::time_t t = time(0);
-    	std::tm * now = localtime( & t );
+		timeb timer_msec;
+		ftime(&timer_msec);	
+		long long int timestamp_msec = 
+			((long long int) timer_msec.time) * 1000ll + (long long int) timer_msec.millitm;
 		std::string timestamp;
 		std::stringstream strstream;
-		strstream << (long)now;
+		strstream << timestamp_msec;
 		strstream >> timestamp;
 
 		std::string message = timestamp + bitmark_id + peer_pubkey;
