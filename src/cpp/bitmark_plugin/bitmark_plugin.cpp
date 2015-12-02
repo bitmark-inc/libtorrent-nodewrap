@@ -63,10 +63,9 @@ namespace libtorrent
 
 		struct bitmark_peer_plugin : peer_plugin
 		{
-			bitmark_peer_plugin(torrent& t, peer_connection& pc, bitmark_metadata_plugin& tp)
+			bitmark_peer_plugin(torrent& t, peer_connection& pc)
 				:m_torrent(t)
 				,m_pc(pc)
-				,m_tp(tp)
 			{
 			}
 
@@ -156,14 +155,13 @@ namespace libtorrent
 			private:
 				torrent& m_torrent;
 				peer_connection& m_pc;
-				bitmark_metadata_plugin& m_tp;
 		};
 
 		boost::shared_ptr<peer_plugin> bitmark_metadata_plugin::new_connection(peer_connection* pc) {
 			if (pc->type() != peer_connection::bittorrent_connection) {
 				return boost::shared_ptr<peer_plugin>();
 			}
-			return boost::shared_ptr<peer_plugin>(new bitmark_peer_plugin(m_torrent, *pc, *this));
+			return boost::shared_ptr<peer_plugin>(new bitmark_peer_plugin(m_torrent, *pc));
 		}
 
 	}
