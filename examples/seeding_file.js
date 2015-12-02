@@ -72,6 +72,7 @@ create_torrent.async_set_piece_hashes(pieceHashPath, function() {
     console.log(torrent_handle.is_valid());
     var info_hash = torrent_handle.info_hash();
     console.log('info_hash::::::', info_hash);
+    console.log('torrent_handle::::', torrent_handle.status().name);
 
     var time = setInterval(function() {
       var progress = torrent_handle.status().progress;

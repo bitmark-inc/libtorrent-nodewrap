@@ -11,4 +11,7 @@ extern "C" {
   int get_state(torrent_status *ts) {
   	return ts->state;
   }
+  char* name(torrent_status *ts) {
+  	return (char*)ts->name.c_str();
+  }
 }
