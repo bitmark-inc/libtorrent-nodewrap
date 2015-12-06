@@ -59,6 +59,10 @@ if [[ $OSTYPE == darwin* ]]; then
   install_name_tool -change libboost_thread.dylib @loader_path/../../lib/osx/libboost_thread.dylib utp_status.dylib
   install_name_tool -change /usr/local/lib/libtorrent-rasterbar.8.dylib @loader_path/../../lib/osx/libtorrent-rasterbar.8.dylib utp_status.dylib
 
+  echo "alert ..."
+  install_name_tool -change libboost_system.dylib @loader_path/../../lib/osx/libboost_system.dylib alert.dylib
+  install_name_tool -change libboost_thread.dylib @loader_path/../../lib/osx/libboost_thread.dylib alert.dylib
+  install_name_tool -change /usr/local/lib/libtorrent-rasterbar.8.dylib @loader_path/../../lib/osx/libtorrent-rasterbar.8.dylib alert.dylib
 
   echo "peer_data ..."
   install_name_tool -change libboost_system.dylib @loader_path/../../lib/osx/libboost_system.dylib peer_data.dylib
