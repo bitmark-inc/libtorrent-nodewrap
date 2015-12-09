@@ -49,7 +49,7 @@ create_torrent.async_set_piece_hashes(pieceHashPath, function() {
 
   console.log('--------------Add Torrent Into the session and Seed------------------------');
   session.start_dht();
-  session.add_port_mapping(6882, 6882);
+  session.add_port_mapping(2, 6882, 6882);
   session.start_upnp();
 
   // console.log('--------------Add Torrent Torrent extension into the session------------------------');

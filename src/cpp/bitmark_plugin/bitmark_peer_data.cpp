@@ -18,8 +18,6 @@
 namespace bitmark
 {
 	//==============internal function
-	const static int box_zero_byte_length = 16;
-	const static int zero_byte_length = 32;
 	const static int crypto_sign_length = 64;
 	extern "C" {
 		typedef unsigned char u8;
