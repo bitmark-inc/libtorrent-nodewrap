@@ -100,9 +100,24 @@ extern "C" {
     ses->start_dht();
   }
 
-  void add_port_mapping(session *ses, int _min, int _max)
+  /*
+   * Function:  add_port_mapping 
+   * --------------------
+   * add_port_mapping adds a port forwarding on UPnP and/or NAT-PMP, whichever is enabled.
+   *
+   *  protocol_type: 1: udp, 2: tcp
+   *  internal_port
+   *  external_port
+   *
+   * The return value is a handle referring to the port mapping that was just created
+   */
+  void add_port_mapping(session *ses, int type, int internal_port, int external_port)
   {
-    ses->add_port_mapping(session::udp, _min, _max);
+    session::protocol_type protocol_type = session::tcp;
+    if(type == 1) {
+      protocol_type = session::udp;
+    }
+    ses->add_port_mapping(protocol_type, internal_port, external_port);
   }
 
   void start_upnp(session *ses) {

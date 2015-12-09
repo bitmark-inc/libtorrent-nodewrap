@@ -15,7 +15,7 @@ module.exports = function() {
     'listen_on': [ 'void', ['pointer', 'int', 'int'] ],
     'add_torrent': [ 'pointer', ['pointer', 'pointer'] ],
     'start_dht': [ 'void', ['pointer'] ],
-    'add_port_mapping': [ 'void', ['pointer', 'int', 'int'] ],
+    'add_port_mapping': [ 'void', ['pointer', 'int', 'int', 'int'] ],
     'start_upnp': [ 'void', ['pointer'] ],
     'start_natpmp': [ 'void', ['pointer'] ],
     'listen_port': [ 'short', ['pointer'] ],
@@ -69,8 +69,8 @@ module.exports = function() {
       s.start_dht(_s);
     };
 
-    this.add_port_mapping = function(_min, _max) {
-      s.add_port_mapping(_s, _min, _max);
+    this.add_port_mapping = function(protocol_type, internal_port, external_port) {
+      s.add_port_mapping(_s, protocol_type, internal_port, external_port);
     };
 
     this.start_upnp = function() {
