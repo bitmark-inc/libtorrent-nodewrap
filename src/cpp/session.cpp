@@ -76,16 +76,14 @@ extern "C" {
 
   /* END Constructor */
 
-  int stop_session(session *s) {
+  void stop_session(session *s) {
     delete s;
-    return 0;
   }
 
-  int listen_on(session *ses, int _min, int _max)
+  void listen_on(session *ses, int _min, int _max)
   {
     libtorrent::error_code ec;
     ses->listen_on(std::make_pair(_min, _max), ec);
-    return ses->listen_port();
   }
 
   torrent_handle* add_torrent(session *ses, add_torrent_params *p) {
@@ -97,37 +95,28 @@ extern "C" {
     return new torrent_handle(th);
   }
 
-  int start_dht(session *ses)
+  void start_dht(session *ses)
   {
     ses->start_dht();
-    return 0;
   }
 
-  int add_port_mapping(session *ses, int _min, int _max)
+  void add_port_mapping(session *ses, int _min, int _max)
   {
     ses->add_port_mapping(session::udp, _min, _max);
-    return 0;
   }
 
-  int start_upnp(session *ses) {
+  void start_upnp(session *ses) {
     ses->start_upnp();
-    return 0;
   }
 
-  int start_natpmp(session *ses) {
+  void start_natpmp(session *ses) {
     ses->start_natpmp();
-    return 0;
   }
 
   torrent_handle* find_torrent(session *ses, torrent_handle *th) {
     sha1_hash info_hash = th->info_hash();
     torrent_handle th_tmp = ses->find_torrent(info_hash);
     return new torrent_handle(th_tmp);
-  }
-
-  int remove_torrent(session *ses, torrent_handle *th) {
-    ses->remove_torrent(*th);
-    return 0;
   }
 
   short listen_port(session *ses) {

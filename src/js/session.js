@@ -11,13 +11,13 @@ module.exports = function() {
 
   var s = ffi.Library(path.resolve(root_dir, 'src/cpp/session'), {
     'new_session': [ 'pointer', [] ],
-    'stop_session': [ 'int', ['pointer'] ],
-    'listen_on': [ 'int', ['pointer', 'int', 'int'] ],
+    'stop_session': [ 'void', ['pointer'] ],
+    'listen_on': [ 'void', ['pointer', 'int', 'int'] ],
     'add_torrent': [ 'pointer', ['pointer', 'pointer'] ],
-    'start_dht': [ 'int', ['pointer'] ],
-    'add_port_mapping': [ 'int', ['pointer', 'int', 'int'] ],
-    'start_upnp': [ 'int', ['pointer'] ],
-    'start_natpmp': [ 'int', ['pointer'] ],
+    'start_dht': [ 'void', ['pointer'] ],
+    'add_port_mapping': [ 'void', ['pointer', 'int', 'int'] ],
+    'start_upnp': [ 'void', ['pointer'] ],
+    'start_natpmp': [ 'void', ['pointer'] ],
     'listen_port': [ 'short', ['pointer'] ],
     'add_extension': [ 'void', ['pointer', 'pointer'] ],
     'add_dht_node': [ 'void', ['pointer', 'CString', 'int'] ],
@@ -29,11 +29,11 @@ module.exports = function() {
     var _torrent_infos = [];
 
     this.stop_session = function() {
-      return s.stop_session(_s);
+      s.stop_session(_s);
     };
 
     this.listen_on = function(fromPort, toPort) {
-      var port = s.listen_on(_s, fromPort, toPort);
+      s.listen_on(_s, fromPort, toPort);
     };
 
     this.add_torrent = function(params) {
@@ -66,19 +66,19 @@ module.exports = function() {
     };
 
     this.start_dht = function() {
-      return s.start_dht(_s);
+      s.start_dht(_s);
     };
 
     this.add_port_mapping = function(_min, _max) {
-      return s.add_port_mapping(_s, _min, _max);
+      s.add_port_mapping(_s, _min, _max);
     };
 
     this.start_upnp = function() {
-      return s.start_upnp(_s);
+      s.start_upnp(_s);
     };
 
     this.start_natpmp = function() {
-      return s.start_natpmp(_s);
+      s.start_natpmp(_s);
     };
 
     this.listen_port = function() {
