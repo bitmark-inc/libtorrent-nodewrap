@@ -5,9 +5,9 @@
 #include <iostream>
 #include <iomanip>
 #include <map>
-#include <time.h> 
+#include <time.h>
 #include <sys/timeb.h>
-#include <sys/time.h> 
+#include <sys/time.h>
 
 #include <curl/curl.h>
 #include <json/json.h>
@@ -44,7 +44,7 @@ namespace bitmark
 		}
 		return convert2HexString(sm, smLength);
 	}
-	
+
 	std::string sign_open(std::string signedMessage, std::string pubKey) {
 
 		int length;
@@ -142,26 +142,21 @@ namespace bitmark
 
 
 	std::string bitmark_peer_data::create_plugin_message(std::string info_hash, std::string peer_ip) {
-		std::cout << "create_plugin_message - info_hash" << info_hash << std::endl;
-		std::cout << "create_plugin_message - peer_ip" << peer_ip << std::endl;
 		std::string peer_pubkey = get_public_key(peer_ip);
 		std::string bitmark_id = get_bitmark_id(info_hash);
-		std::cout << "create_plugin_message - peer_pubkey" << peer_pubkey << std::endl;
-		std::cout << "create_plugin_message - bitmark_id" << bitmark_id << std::endl;
 
 		if (peer_pubkey.empty() || bitmark_id.empty()) {
 			return std::string("");
 		}
 
 		timeb timer_msec;
-		ftime(&timer_msec);	
-		long long int timestamp_msec = 
+		ftime(&timer_msec);
+		long long int timestamp_msec =
 			((long long int) timer_msec.time) * 1000ll + (long long int) timer_msec.millitm;
 		std::string timestamp;
 		std::stringstream strstream;
 		strstream << timestamp_msec;
 		strstream >> timestamp;
-
 		std::string message = timestamp + bitmark_id + peer_pubkey;
 
 		message = convert2HexString((unsigned char *)message.c_str(), message.size());
@@ -183,7 +178,6 @@ namespace bitmark
 
 	bool bitmark_peer_data::check_plugin_message(std::string signData, std::string info_hash) {
 		// return true;
-		std::cout << "check_plugin_message ===============" << std::endl;
 		json_object * joExtMsg = json_tokener_parse(signData.c_str());
 		json_object * joExtMsgSM = json_object_object_get(joExtMsg, "signature");
 		json_object * joExtMsgDP = json_object_object_get(joExtMsg, "downloadPubkey");
@@ -207,10 +201,7 @@ namespace bitmark
 			return false;
 		}
 
-		std::cout << "check_plugin_message -  resultCheck" << resultCheck << std::endl;
-
 		json_object * joRC = json_tokener_parse(resultCheck.c_str());
-
 		json_object * joRCOK = json_object_object_get(joRC, "ok");
 		json_type typeOK = json_object_get_type(joRCOK);
 		if (typeOK == json_type_boolean) {
@@ -223,9 +214,9 @@ namespace bitmark
 					bool allow = json_object_get_boolean(joRAL);
 					if (allow) {
 						return true;
-					} else {
-						json_object * joRRA = json_object_object_get(joRCRS, "reason");
-						std::cout << "check download failed because " << json_object_get_string(joRRA) << std::endl;
+					// } else {
+					// 	json_object * joRRA = json_object_object_get(joRCRS, "reason");
+						// std::cout << "check download failed because " << json_object_get_string(joRRA) << std::endl;
 					}
 				}
 			}

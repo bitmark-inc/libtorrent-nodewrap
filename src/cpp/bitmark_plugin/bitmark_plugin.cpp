@@ -74,21 +74,29 @@ namespace libtorrent
 				return extension_name;
 			}
 
+			std::string get_ip_address(peer_connection& pc) {
+				std::ostringstream str_tmp;
+				str_tmp << pc.remote().address().to_string();
+				str_tmp << ":";
+				str_tmp << pc.remote().port();
+				std::string ip_address = str_tmp.str();
+				std::string tmp("::ffff:");
+				if (ip_address.find(tmp) >= 0 && ip_address.find(tmp) < ip_address.length()) {
+					ip_address.replace(ip_address.find(tmp), tmp.length(), "");
+				}
+				return ip_address;
+			}
+
 			virtual void add_handshake(entry& h)
 			{
 				std::string info_hash = m_torrent.torrent_file().info_hash().to_string();
 				info_hash = bitmark::convert2HexString((unsigned char*)info_hash.c_str(), info_hash.size());
 
-				std::ostringstream str_tmp;
-				str_tmp << m_pc.remote().address().to_string();
-				str_tmp << ":";
-				str_tmp << m_pc.remote().port();
-				std::string peer_ip = str_tmp.str();
+				std::string peer_ip = get_ip_address(m_pc);
 
 				entry& messages = h["m"];
 				//add extension message
 				std::string messageString = m_bpd->create_plugin_message(info_hash, peer_ip);
-				std::cout << "add_handshake - messageString" << messageString << std::endl;
 				messages[extension_name] = messageString;
 			}
 
@@ -105,29 +113,27 @@ namespace libtorrent
 				std::string info_hash = m_torrent.torrent_file().info_hash().to_string();
 				info_hash = bitmark::convert2HexString((unsigned char*)info_hash.c_str(), info_hash.size());
 
-				std::ostringstream str_tmp;
-				str_tmp << m_pc.remote().address().to_string();
-				str_tmp << ":";
-				str_tmp << m_pc.remote().port();
-				std::string peer_ip = str_tmp.str();
-
+				std::string peer_ip = get_ip_address(m_pc);
 				if (m_bpd->check_allow_torrent_peer(info_hash, peer_ip)) {
 					// peer contain in list peers allow to download
-					std::cout << "on_extension_handshake - check_allow_torrent_peer " << std::endl;
 					return true;
 				}
 
 				if (signedMessageString.empty()) {
-					std::cout << "on_extension_handshake - signedMessageString empty" << std::endl;
-					resultCheck = false;
+					std::string peer_pubkey = m_bpd->get_public_key(peer_ip);
+					if (!peer_pubkey.empty()) {
+						resultCheck = true;
+					} else {
+						resultCheck = false;
+					}
 				} else {
-					std::cout << "on_extension_handshake - check_plugin_message" << std::endl;
 					resultCheck = m_bpd->check_plugin_message(signedMessageString, info_hash);
 				}
 
 				if (resultCheck) {
 					m_bpd->set_allow_torrent_peer(info_hash, peer_ip);
 				}
+
 
 				return true;
 			}
@@ -137,11 +143,7 @@ namespace libtorrent
 				std::string info_hash = m_torrent.torrent_file().info_hash().to_string();
 				info_hash = bitmark::convert2HexString((unsigned char*)info_hash.c_str(), info_hash.size());
 
-				std::ostringstream str_tmp;
-				str_tmp << m_pc.remote().address().to_string();
-				str_tmp << ":";
-				str_tmp << m_pc.remote().port();
-				std::string peer_ip = str_tmp.str();
+				std::string peer_ip = get_ip_address(m_pc);
 
 				if (m_bpd->check_allow_torrent_peer(info_hash, peer_ip)) {
 					// peer contain in list peers allow to download
