@@ -5,7 +5,12 @@ var AddTorrentParam = require('./add_torrent_params')();
 var Alert = require('./alert')();
 
 // get root dir
-var root_dir = __dirname.replace('/src/js', '/');
+var root_dir;
+if (ffi.LIB_EXT === '.dll') {
+  root_dir = path.resolve(__dirname.replace('\\src\\js', '\\'));
+} else {
+  root_dir = __dirname.replace('/src/js', '/');
+}
 
 module.exports = function() {
 
