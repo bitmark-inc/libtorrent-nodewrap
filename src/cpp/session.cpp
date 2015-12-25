@@ -5,7 +5,12 @@
 #include <boost/function.hpp>
 
 #include <sys/types.h>
+#if defined(WIN32) || defined(_WIN32)
+#define EXPORT __declspec(dllexport)
+#else
+#define EXPORT
 #include <unistd.h>
+#endif
 
 // include libtorrent
 #include "libtorrent/entry.hpp"
@@ -52,7 +57,7 @@ extern "C" {
   };
 
   /* START Constructor */
-  session* new_session()
+  EXPORT session* new_session()
   {
     return new session();
   }
@@ -76,17 +81,17 @@ extern "C" {
 
   /* END Constructor */
 
-  void stop_session(session *s) {
+  EXPORT void stop_session(session *s) {
     delete s;
   }
 
-  void listen_on(session *ses, int _min, int _max)
+  EXPORT void listen_on(session *ses, int _min, int _max)
   {
     libtorrent::error_code ec;
     ses->listen_on(std::make_pair(_min, _max), ec);
   }
 
-  torrent_handle* add_torrent(session *ses, add_torrent_params *p) {
+  EXPORT torrent_handle* add_torrent(session *ses, add_torrent_params *p) {
     libtorrent::error_code ec;
     torrent_handle th = ses->add_torrent(*p, ec);
     if (ec) {
@@ -95,7 +100,7 @@ extern "C" {
     return new torrent_handle(th);
   }
 
-  void start_dht(session *ses)
+  EXPORT void start_dht(session *ses)
   {
     ses->start_dht();
   }
@@ -111,7 +116,7 @@ extern "C" {
    *
    * The return value is a handle referring to the port mapping that was just created
    */
-  void add_port_mapping(session *ses, int type, int internal_port, int external_port)
+  EXPORT void add_port_mapping(session *ses, int type, int internal_port, int external_port)
   {
     session::protocol_type protocol_type = session::tcp;
     if(type == 1) {
@@ -120,37 +125,37 @@ extern "C" {
     ses->add_port_mapping(protocol_type, internal_port, external_port);
   }
 
-  void start_upnp(session *ses) {
+  EXPORT void start_upnp(session *ses) {
     ses->start_upnp();
   }
 
-  void start_natpmp(session *ses) {
+  EXPORT void start_natpmp(session *ses) {
     ses->start_natpmp();
   }
 
-  torrent_handle* find_torrent(session *ses, torrent_handle *th) {
+  EXPORT torrent_handle* find_torrent(session *ses, torrent_handle *th) {
     sha1_hash info_hash = th->info_hash();
     torrent_handle th_tmp = ses->find_torrent(info_hash);
     return new torrent_handle(th_tmp);
   }
 
-  short listen_port(session *ses) {
+  EXPORT short listen_port(session *ses) {
     return ses->listen_port();
   }
 
-  void add_extension(session *ses, bitmark_peer_data *bpd) {
+  EXPORT void add_extension(session *ses, bitmark_peer_data *bpd) {
     //add plug in
     bitmark_plugin bp;
     bp.set_bitmark_peer_data(bpd);
     ses->add_extension(bp.get_create_bitmark_plugin_function());
   }
 
-  void add_dht_node(session *ses, char *addr, int port) {
+  EXPORT void add_dht_node(session *ses, char *addr, int port) {
     std::string addr_str = addr;
     ses->add_dht_node(std::make_pair(addr_str, port));
   }
 
-  alert* pop_alert(session *ses) {
+  EXPORT alert* pop_alert(session *ses) {
     return ses->pop_alert().release();
   }
 }

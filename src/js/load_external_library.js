@@ -28,7 +28,8 @@ if (ffi.LIB_EXT === '.so') {
   ffi.DynamicLibrary(root_dir + '\\lib\\window\\boost_date_time-vc120-mt-1_58.dll');
   ffi.DynamicLibrary(root_dir + '\\lib\\window\\boost_thread-vc120-mt-1_58.dll');
   
-  ffi.DynamicLibrary(root_dir + '\\lib\\window\\libtorrent.dll');
   ffi.DynamicLibrary(root_dir + '\\lib\\window\\libcurl.dll');
-  ffi.DynamicLibrary(root_dir + '\\lib\\window\\Json_c_lib.dll');
+  ffi.DynamicLibrary(root_dir + '\\lib\\window\\json_c.dll');
+
+  ffi.DynamicLibrary(root_dir + '\\lib\\window\\libtorrent.dll');
 }	

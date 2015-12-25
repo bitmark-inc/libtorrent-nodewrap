@@ -7,7 +7,12 @@
 #include <map>
 #include <time.h>
 #include <sys/timeb.h>
-#include <sys/time.h>
+
+#ifdef WIN32
+	#include <windows.h>
+#else // Unix based system specific
+	#include <sys/time.h>
+#endif
 
 #include <curl/curl.h>
 #include <json/json.h>

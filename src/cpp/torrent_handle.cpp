@@ -2,11 +2,17 @@
 #include <boost/thread.hpp>
 #include "libtorrent/session.hpp"
 
+#if defined(WIN32) || defined(_WIN32)
+#define EXPORT __declspec(dllexport)
+#else
+#define EXPORT
+#endif
+
 using namespace libtorrent;
 
 extern "C" {
 
-  std::string convert_2_hex_string(unsigned char *data, int len) {
+  EXPORT std::string convert_2_hex_string(unsigned char *data, int len) {
     std::stringstream ss;
     ss << std::hex;
     for (int i = 0; i < len; ++i) {
@@ -14,27 +20,27 @@ extern "C" {
     }
     return ss.str();
   }
-  bool is_valid(torrent_handle* handle) {
+  EXPORT bool is_valid(torrent_handle* handle) {
     return handle->is_valid();
   }
-  char* info_hash(torrent_handle* handle) {
+  EXPORT char* info_hash(torrent_handle* handle) {
     std::cout << "Inside function::::" << handle->info_hash() << std::endl;
     unsigned char* info_hash = (unsigned char*)handle->info_hash().to_string().c_str();
     int lng = strlen((char *)info_hash);
     std::string tmp = convert_2_hex_string(info_hash, lng);
     return strdup(tmp.c_str());
   }
-  torrent_status* status(torrent_handle* handle) {
+  EXPORT torrent_status* status(torrent_handle* handle) {
     return new torrent_status(handle->status());
   }
-  void add_url_seed(torrent_handle* handle, char *data) {
+  EXPORT void add_url_seed(torrent_handle* handle, char *data) {
     std::string const& url = data;
     handle->add_url_seed(url);
   }
-  char* name(torrent_handle* handle) {
+  EXPORT char* name(torrent_handle* handle) {
     return (char*)handle->name().c_str();
   }
-  void connect_peer(torrent_handle* handle, char *addr, int port, int source = 0) {
+  EXPORT void connect_peer(torrent_handle* handle, char *addr, int port, int source = 0) {
     tcp::endpoint ep(boost::asio::ip::address::from_string(addr), port);
     handle->connect_peer(ep, source);
   }
