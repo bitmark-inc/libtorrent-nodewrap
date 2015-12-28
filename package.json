@@ -45,7 +45,6 @@
     "crypto": false
   },
   "scripts": {
-    "install": "./link_library_for_MAC.sh"
+    "install": "node install_dependencies.js"
   }
-  
 }
