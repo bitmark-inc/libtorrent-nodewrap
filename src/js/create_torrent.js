@@ -22,6 +22,7 @@ module.exports = function() {
     // 'set_file_hash': ['void', ['pointer', 'CString']], TODO
     'add_url_seed': ['void', ['pointer', 'CString']],
     'add_http_seed': ['void', ['pointer', 'CString']],
+    'create_torrent_file': ['bool', ['pointer', 'CString']]
   });
 
   var CreateTorrent = function(file_storage) {
@@ -59,6 +60,9 @@ module.exports = function() {
     };
     this.add_http_seed = function(http_url) {
       ct.add_http_seed(_ct, http_url);
+    };
+    this.create_torrent_file = function(filePath) {
+      return ct.create_torrent_file(_ct, filePath);
     };
   };
 

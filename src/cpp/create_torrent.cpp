@@ -24,7 +24,6 @@ extern "C" {
   EXPORT std::vector<char>* bencode(create_torrent* ct) {
     std::vector<char> torrentBuffer;
     bencode(back_inserter(torrentBuffer), ct->generate());
-
     return new std::vector<char>(torrentBuffer);
   }
 
@@ -75,5 +74,20 @@ extern "C" {
   }
   EXPORT int piece_size(create_torrent* ct, int i) {
     return ct->piece_size(i);
+  }
+  EXPORT bool create_torrent_file(create_torrent* ct, char* filePath) {
+    std::vector<char> torrent;
+    std::string outfile(filePath);
+    bencode(back_inserter(torrent), ct->generate());
+    FILE* output = fopen(outfile.c_str(), "wb+"); 
+    if (output == NULL)
+    {
+      fprintf(stderr, "failed to open file \"%s\": (%d) %s\n"
+        , outfile.c_str(), errno, strerror(errno));
+      return false;
+    }
+    fwrite(&torrent[0], 1, torrent.size(), output);
+    fclose(output);
+    return true;
   }
 }

@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <boost/thread.hpp>
 #include <boost/function.hpp>
+#include <iostream>
 
 #include <sys/types.h>
 #if defined(WIN32) || defined(_WIN32)
@@ -157,5 +158,20 @@ extern "C" {
 
   EXPORT alert* pop_alert(session *ses) {
     return ses->pop_alert().release();
+  }
+
+  EXPORT session_settings* get_setting_high_performance_seed() {
+    session_settings temp = high_performance_seed();
+    return new session_settings(temp);
+  }
+
+  EXPORT void set_settings(session *ses, session_settings *setting) {
+    const session_settings temp(*setting);
+    ses->set_settings(temp);
+  }
+
+  EXPORT session_settings* settings(session *ses) {
+    session_settings temp = ses->settings();
+    return new session_settings(temp);
   }
 }

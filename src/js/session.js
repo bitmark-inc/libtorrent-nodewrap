@@ -3,6 +3,7 @@ var path = require('path');
 var TorrentHandle = require('./torrent_handle')();
 var AddTorrentParam = require('./add_torrent_params')();
 var Alert = require('./alert')();
+var SessionSettings = require('./session_settings')();
 
 // get root dir
 var root_dir;
@@ -26,12 +27,15 @@ module.exports = function() {
     'listen_port': [ 'short', ['pointer'] ],
     'add_extension': [ 'void', ['pointer', 'pointer'] ],
     'add_dht_node': [ 'void', ['pointer', 'CString', 'int'] ],
-    'pop_alert': ['pointer', ['pointer']]
+    'pop_alert': [ 'pointer', ['pointer']],
+    'get_setting_high_performance_seed': [ 'pointer', [] ],
+    'set_settings': [ 'void', ['pointer', 'pointer'] ],
+    'settings': [ 'pointer', ['pointer']]
+
   });
 
   var Session = function() {
     var _s = s.new_session();
-    var _torrent_infos = [];
 
     this.stop_session = function() {
       s.stop_session(_s);
@@ -101,6 +105,18 @@ module.exports = function() {
     this.pop_alert = function() {
       var alert = s.pop_alert(_s);
       return new Alert(alert);
+    };
+
+    this.get_setting_high_performance_seed = function() {
+      return new SessionSettings(s.get_setting_high_performance_seed());
+    };
+
+    this.set_settings = function(setting) {
+      s.set_settings(_s, setting.get_entry());
+    };
+
+    this.settings = function() {
+      return new SessionSettings(s.settings(_s));
     };
   };
 

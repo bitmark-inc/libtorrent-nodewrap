@@ -9,5 +9,6 @@ module.exports = {
   torrent_status: require('./torrent_status')(),
   create_torrent: require('./create_torrent')(),
   peer_data: require('./peer_data')(),
+  session_settings: require('./session_settings')(),
   alert: require('./alert')()
 };
