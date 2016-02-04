@@ -44,4 +44,10 @@ extern "C" {
     tcp::endpoint ep(boost::asio::ip::address::from_string(addr), port);
     handle->connect_peer(ep, source);
   }
+  EXPORT void set_upload_limit(torrent_handle *handle, int limit) {
+    handle->set_upload_limit(limit);
+  }
+  EXPORT void set_download_limit(torrent_handle *handle, int limit) {
+    handle->set_download_limit(limit);
+  }
 }

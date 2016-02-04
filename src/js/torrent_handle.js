@@ -18,7 +18,9 @@ module.exports = function() {
     'info_hash': [ 'CString', ['pointer'] ],
     'status': [ 'pointer', ['pointer'] ],
     'name': [ 'pointer', ['CString'] ],
-    'connect_peer': [ 'void', ['pointer', 'CString', 'int', 'int'] ]
+    'connect_peer': [ 'void', ['pointer', 'CString', 'int', 'int'] ],
+    'set_upload_limit': [ 'void', ['pointer', 'int'] ],
+    'set_download_limit': [ 'void', ['pointer', 'int'] ]
   });
 
 
@@ -52,6 +54,14 @@ module.exports = function() {
 
     this.connect_peer = function(addr, port, source) {
       th.connect_peer(_th, addr, port, source);
+    };
+
+    this.set_upload_limit = function(limit) {
+      th.set_upload_limit(_th, limit);
+    };
+
+    this.set_download_limit = function(limit) {
+      th.set_download_limit(_th, limit);
     };
   };
 
