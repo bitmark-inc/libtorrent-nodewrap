@@ -18,4 +18,20 @@ extern "C" {
 	EXPORT bool get_ban_web_seeds(session_settings *setting) {
     	return setting->ban_web_seeds;
 	}
+
+	EXPORT void set_upload_rate_limit (session_settings *setting, int limit ) {
+    	setting->upload_rate_limit = limit;
+	}
+
+	EXPORT int get_upload_rate_limit (session_settings *setting) {
+    	return setting->upload_rate_limit;
+	}
+
+	EXPORT void set_download_rate_limit(session_settings *setting, int limit ) {
+    	setting->download_rate_limit = limit;
+	}
+
+	EXPORT int get_download_rate_limit (session_settings *setting) {
+    	return setting->download_rate_limit;
+	}
 }
