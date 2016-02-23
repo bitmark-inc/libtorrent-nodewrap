@@ -1,0 +1,43 @@
+1. Need rebuild for "libtorrent-nodewrap" module and "tweetnacl-nodewrap" module in "bimark-lib" in window 64 bit
+1.1 "libtorrent-nodewrap"
+	- cd [..]/libtorrent-nodewrap
+	- npm install
+	rebuild for ffi
+	- cd node_modules/ffi
+ 	- node-gyp rebuild
+	rebuild for ref
+	- cd node_modules/ffi
+	- node-gyp rebuild
+1.2 "tweetnacl-nodewrap"
+	- cd [..]/libtorrent-nodewrap
+	- npm install
+	rebuild for ffi
+	- cd node_modules/ffi
+ 	- node-gyp rebuild
+	rebuild for ref
+	- cd node_modules/ffi
+	- node-gyp rebuild
+
+2. Because on window, when nw-gyp build, it generate "*.node" file to call "DLL" files. But "*.node" files will call nw.exe (default on window)
+So need change the calling "nw.exe" to application name ("Bitmark.exe") in "*.node" files
+Tool to support: 
+	- Gui: http://developers.ironsrc.com/rename-import-dll/
+	- Download : https://github.com/ironSource/rename-import-dll/releases (Version 0.0.2 support 64 bit)
+	- Using rid.exe:
+	2.1 "libtorrent-nodewrap"
+		- copy "rid.exe" to "..\libtorrent-nodewrap\node_modules\ffi\build\Release"
+		- Open "CMD" and go to "..\libtorrent-nodewrap\node_modules\ffi\build\Release"
+		- run : 
+			rid.exe ffi_bindings.node  // ==> display info call nw.exe
+			rid.exe ffi_bindings.node nw.exe Bitmark.exe // ==> display info change nw.exe to Bitmark.exe
+		- copy "rid.exe" to "..\libtorrent-nodewrap\node_modules\ref\build\Release"
+		- Open "CMD" and go to "..\libtorrent-nodewrap\node_modules\ref\build\Release"
+		- run : 
+			rid.exe bindings.node  // ==> display info call nw.exe
+			rid.exe bindings.node nw.exe Bitmark.exe // ==> display info change nw.exe to Bitmark.exe
+	2.2 "tweetnacl-nodewrap": do as "libtorrent-nodewrap"
+
+3. Copy and replace "libtorrent-nodewrap" and "tweetnacl-nodewrap" to the corresponding folder.
+
+
+22Qqn guq82 dc3cd 8SacQ vncLR 5DBGv Z5sN2 axS4C Rq69H A3PJS Ah8a

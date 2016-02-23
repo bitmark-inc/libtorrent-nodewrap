@@ -1,0 +1,215 @@
+Note build for win64 bit.
+1. Build boost.
+	Link download : http://sourceforge.net/projects/boost/files/boost/1.60.0/
+	Unzip and move to your folder (D:\bitmark\libtorrent\boost64)
+	- Run Command Prompt.
+	- Go to boost folder (D:\bitmark\libtorrent\boost64) and run
+	 + bootstrap
+	 + b2 link=shared,static address-model=64
+ 
+2. Install openssl
+	Link download : https://slproweb.com/download/Win64OpenSSL-1_0_2e.exe
+	- Download and install openssl for win64: Win64OpenSSL-1_0_2e.exe
+	  Note : folder install is  "D:\bitmark\libtorrent\OpenSSL-Win64"
+ 
+3. Build libtorrent
+	Link download : https://github.com/arvidn/libtorrent/releases/download/libtorrent-1_0_6/libtorrent-rasterbar-1.0.6.tar.gz
+	- Download libtorrent-rasterbar(can get new version) and unzip at "D:\bitmark\libtorrent\libtorrent-rasterbar"
+	- Open Visual studio and create new project ("Win32 project") with name is "libtorrent" (and save at D:\bitmark\libtorrent\project)
+	- Choose application type is DLL and uncheck all options.
+	- In "Solution Explorer"
+		+ Choose "Source file", right mouse click and "add new filter", set name is "kademlia"
+		+ Choose "kademlia" and right mouse click and "add existing item"
+			add all souce in folder "libtorrent-rasterbar\src\kademlia"
+		+ Choose "Source file", right mouse click and "add existing item"
+			add all souce in folder "libtorrent-rasterbar\src\"
+		+ Choose "Source file", right mouse click and "add existing item"
+			add all souce in folder "libtorrent-rasterbar\ed25519\src" 
+		+ Choose "libtorrent" project, righ mouse click and choose Properties.
+			at Configuration Properties --> C/C++ --> General --> Additional Include Directories
+				add boost include and libtorrent include:
+					D:\bitmark\libtorrent\boost64
+					D:\bitmark\libtorrent\libtorrent-rasterbar\include
+					D:\bitmark\libtorrent\OpenSSL-Win64\include
+			at Configuration Properties --> C/C++ --> Preprocessor --> Preprocessor Definitions
+				add :
+					WIN32
+					WIN32_LEAN_AND_MEAN
+					_WIN32_WINNT=0x0500
+					_CRT_SECURE_NO_DEPRECATE
+					UNICODE
+					BOOST_ASIO_HASH_MAP_BUCKETS=1021
+					BOOST_FILESYSTEM_VERSION=2
+					WITH_SHIPPED_GEOIP_H
+					TORRENT_BUILDING_SHARED
+					BOOST_ASIO_SEPARATE_COMPILATION
+					BOOST_ASIO_ENABLE_CANCELIO
+					TORRENT_USE_OPENSSL
+			at Configuration Properties --> C/C++ --> Precompiled Headers --> Precompiled Headers
+				set : empty
+			at  Configuration Properties --> Linker --> General --> Additional Library Directories
+				add :
+					D:\bitmark\libtorrent\boost64\stage\lib
+					D:\bitmark\libtorrent\OpenSSL-Win64\lib
+			at  Configuration Properties --> Linker --> Input --> Additional Dependencies
+				add :
+					libeay32.lib 
+					ssleay32.lib 
+		+  Setting build 64 bit: Choose "libtorrent" project, righ mouse click and choose Properties. ( Note: setting build 64 bit after create all projects)
+			at  Configuration, choose Configuration Manager
+				Active Solution Platform --> New
+				Type or select the new platform --> x64
+				Copy setting from --> win32
+				==> OK==>OK...
+	==> build ==> libtorrent.dll and libtorrent.lib contain in folder of project : "..\x64\Release"
+	copy libtorrent.lib to "d:\bitmark\libtorrent\project\library\libtorrent"
+	copy libtorrent.dll to  "d:\bitmark\libtorrent\project\library\dll"
+
+4. build dll for libtorrent-nodewrap.
+4.1 build json_c
+	Link download source: https://github.com/json-c/json-c/archive/master.zip
+	Unzip and move to your folder (D:\d\bitmark\libtorrent\project\library\json\include\json)
+	- rename json_config.h.win32 => json_config.h
+	- Open Visual studio and create new project ("Win32 project") with name is "json_c" (and save at D:\bitmark\libtorrent\project\libtorrent\json_c)
+	- Choose application type is DLL and uncheck all options.
+	- In "Solution Explorer"
+		+ Choose "Source file", right mouse click and "add existing item"
+			add all source(*.c, *.h) in folder "D:\d\bitmark\libtorrent\project\library\json\include\json"
+		+ Choose "json_c" project, righ mouse click and choose Properties.
+			at Configuration Properties --> C/C++ --> Precompiled Headers --> Precompiled Headers
+			set : empty
+
+	+  Setting build 64 bit: Choose "libtorrent" project, righ mouse click and choose Properties. ( Note: setting build 64 bit after create all projects)
+			at  Configuration, choose Configuration Manager
+				Active Solution Platform --> New
+				Type or select the new platform --> x64
+				Copy setting from --> win32
+				==> OK==>OK...
+
+Build DLL,	+ Choose "json_c" project, righ mouse click and choose Properties.
+			at Configuration Properties --> "General"--> Configuration Type
+				Choose Dynamic Library (.dll)
+	==> build ==> json_c.dll contain in folder of : "../x64/release"
+	copy json_c.dll to  "d:\bitmark\libtorrent\project\library\dll"
+Build LIB,	+ Choose "json_c" project, righ mouse click and choose Properties.
+			at Configuration Properties --> "General"--> Configuration Type
+				Choose Static library (.lib)
+	==> build ==> json_c.lib contain in folder of : "../x64/release"
+	copy json_c.lib to  "d:\bitmark\libtorrent\project\library\json\lib"
+	
+4.2 build libcurl
+	Download at : https://github.com/blackrosezy/build-libcurl-windows
+	run build.bat to auto build libcurl, output at "third-party"
+	copy "libcurl" in "third-party" to "d:\bitmark\libtorrent\project\library"
+
+4.3 build normal DLL
+	add_torrent_params.cpp
+	alert.cpp
+	create_torrent.cpp
+	file_storage.cpp
+	session_status.cpp
+	torrent_handle.cpp
+	torrent_info.cpp
+	torrrent_status.cpp
+	utp_status.cpp
+
+	With each file (cpp) create a project with correspondding name ( Win32 project , DLL as #3 build libtorrent)
+	Ex: add_torrent_parrams.cpp ==> "add_torrent_params" project
+	    - In "Solution Explorer"
+		+ Choose "Source file", right mouse click and "add existing item"
+			add file "libtorrent-nodewrap\src\cpp\add_torrent_params.cpp"
+		+ Choose "add_torrent_parrams" project, righ mouse click and choose Properties.
+			at Configuration Properties --> C/C++ --> General --> Additional Include Directories
+				add boost include and libtorrent include:
+					D:\bitmark\libtorrent\boost64
+					D:\bitmark\libtorrent\libtorrent-rasterbar\include
+					D:\bitmark\libtorrent\OpenSSL-Win64\include
+			at Configuration Properties --> C/C++ --> Preprocessor --> Preprocessor Definitions
+				add :
+					WIN32
+					WIN32_LEAN_AND_MEAN
+					_WIN32_WINNT=0x0500
+					_CRT_SECURE_NO_DEPRECATE
+					UNICODE
+					BOOST_ASIO_HASH_MAP_BUCKETS=1021
+					BOOST_FILESYSTEM_VERSION=2
+					WITH_SHIPPED_GEOIP_H
+					TORRENT_BUILDING_SHARED
+					BOOST_ASIO_SEPARATE_COMPILATION
+					BOOST_ASIO_ENABLE_CANCELIO
+					TORRENT_USE_OPENSSL
+			at Configuration Properties --> C/C++ --> Precompiled Headers --> Precompiled Headers
+				set : empty
+			at  Configuration Properties --> Linker --> General --> Additional Library Directories
+				add :
+					D:\bitmark\libtorrent\boost64\stage\lib
+					D:\bitmark\libtorrent\OpenSSL-Win64\lib
+					D:\bitmark\libtorrent\project\library\libtorrent
+			at  Configuration Properties --> Linker --> Input --> Additional Dependencies
+				add :
+					libeay32.lib 
+					ssleay32.lib
+					libtorrent.lib
+		+  Setting build 64 bit: Choose "libtorrent" project, righ mouse click and choose Properties. ( Note: setting build 64 bit after create all projects)
+			at  Configuration, choose Configuration Manager
+				Active Solution Platform --> New
+				Type or select the new platform --> x64
+				Copy setting from --> win32
+				==> OK==>OK...
+
+4.4 build special dll : peer_data
+	peer_data.cpp ==> "peer_data" project
+	    - In "Solution Explorer"
+		+ Choose "Source file", right mouse click and "add new filter", set name is "bitmark_plugin"
+		+ Choose "bitmark_plugin" and right mouse click and "add existing item"
+			add bitmark_peer_data.cpp, bitmark_peer_data.hpp and tweetnacl.c in "libtorrent-nodewrap\src\cpp\bitmark_plugin"
+		+ Choose "Source file", right mouse click and "add existing item"
+			add file "libtorrent-nodewrap\src\cpp\peer_data.cpp"
+		+ Choose "peer_data" project, righ mouse click and choose Properties.
+			at Configuration Properties --> C/C++ --> General --> Additional Include Directories
+				add boost include and libtorrent include:
+					D:\bitmark\libtorrent\boost64
+					D:\bitmark\libtorrent\libtorrent-rasterbar\include
+					D:\bitmark\libtorrent\OpenSSL-Win64\include
+					D:\bitmark\libtorrent\project\library\libcurl\include
+					D:\bitmark\libtorrent\project\library\json\include
+			at Configuration Properties --> C/C++ --> Preprocessor --> Preprocessor Definitions
+				add :
+					WIN32
+					WIN32_LEAN_AND_MEAN
+					_WIN32_WINNT=0x0500
+					_CRT_SECURE_NO_DEPRECATE
+					UNICODE
+					BOOST_ASIO_HASH_MAP_BUCKETS=1021
+					BOOST_FILESYSTEM_VERSION=2
+					WITH_SHIPPED_GEOIP_H
+					TORRENT_BUILDING_SHARED
+					BOOST_ASIO_SEPARATE_COMPILATION
+					BOOST_ASIO_ENABLE_CANCELIO
+					TORRENT_USE_OPENSSL
+			at Configuration Properties --> C/C++ --> Precompiled Headers --> Precompiled Headers
+				set : empty
+			at  Configuration Properties --> Linker --> General --> Additional Library Directories
+				add :
+					D:\bitmark\libtorrent\boost64\stage\lib
+					D:\bitmark\libtorrent\OpenSSL-Win64\lib
+					D:\bitmark\libtorrent\project\library\libtorrent
+					D:\bitmark\libtorrent\project\library\libcurl\lib\dll-release-x64
+					D:\bitmark\libtorrent\project\library\json\lib;
+			at  Configuration Properties --> Linker --> Input --> Additional Dependencies
+				add :
+					libeay32.lib 
+					ssleay32.lib
+					libtorrent.lib
+					json_c.lib
+					libcurl.lib
+		+  Setting build 64 bit: Choose "libtorrent" project, righ mouse click and choose Properties. ( Note: setting build 64 bit after create all projects)
+			at  Configuration, choose Configuration Manager
+				Active Solution Platform --> New
+				Type or select the new platform --> x64
+				Copy setting from --> win32
+				==> OK==>OK...
+4.5 build special dll : session  
+	Process as peer_data.
+	Difference: 	at   + Choose "bitmark_plugin" and right mouse click and "add existing item"	
+				add all source in "libtorrent-nodewrap\src\cpp\bitmark_plugin"
