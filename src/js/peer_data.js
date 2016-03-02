@@ -17,7 +17,7 @@ module.exports = function() {
     'set_peer_data': ['void', ['pointer', 'CString', 'CString', 'CString']],
     'add_bitmark_id': ['void', ['pointer', 'CString', 'CString']],
     'add_peer_pubkey': ['void', ['pointer', 'CString', 'CString']],
-  }); 
+  });
 
   var PeerData = function() {
     var _pd = pd.new_peer_data();
