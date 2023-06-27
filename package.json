@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "bindings": "~1.2.0",
-    "debug": "2",
+    "debug": ">=2.6.9",
     "ffi": "^2.0.0",
     "nan": "2",
     "ref": "1",
